@@ -1,9 +1,9 @@
 <?php
 /**
- * Classe Camera qui gère les caméras avec des méthodes CRUD en base de données.
+ * Classe Camera pour gérer les caméras.
  */
 
-require_once '../config.php';
+require_once __DIR__ . '/../../config.php';
 
 class Camera {
     private $pdo;
@@ -12,19 +12,21 @@ class Camera {
         $this->pdo = getPDOConnection();
     }
 
+    // Récupérer toutes les caméras
     public function getAll() {
-        $stmt = $this->pdo->query("SELECT * FROM camera");
+        $stmt = $this->pdo->query("SELECT * FROM caméras");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function add($name, $ip, $port) {
-        $stmt = $this->pdo->prepare("INSERT INTO camera (name, ip, port) VALUES (:name, :ip, :port)");
-        $stmt->execute(['name' => $name, 'ip' => $ip, 'port' => $port]);
-    }    
+    // Ajouter une caméra
+    public function add($emplacement) {
+        $stmt = $this->pdo->prepare("INSERT INTO caméras (emplacement) VALUES (:emplacement)");
+        $stmt->execute(['emplacement' => $emplacement]);
+    }
 
+    // Supprimer une caméra
     public function delete($id) {
-        $stmt = $this->pdo->prepare("DELETE FROM camera WHERE id_camera = :id");
+        $stmt = $this->pdo->prepare("DELETE FROM caméras WHERE id_camera = :id");
         $stmt->execute(['id' => $id]);
     }
-}   
-?>
+}

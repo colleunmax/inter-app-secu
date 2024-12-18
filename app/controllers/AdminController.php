@@ -3,8 +3,8 @@
  * Classe AdminController qui gère les fonctionnalités liées aux administrateurs.
  */
 
-require_once '../app/models/Camera.php';
-require_once '../app/models/Sensor.php';
+require_once '../app/models/camera.php';
+require_once '../app/models/sensor.php';
 
 class AdminController {
     public function login() {

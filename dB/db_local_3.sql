@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 17, 2024 at 01:02 AM
+-- Generation Time: Dec 17, 2024 at 03:45 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -18,197 +18,251 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `db_local_3`
+-- Database: `security_db`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `alert`
+-- Table structure for table `alertes_globales`
 --
 
-CREATE TABLE `alert` (
-  `id_alert` int NOT NULL,
-  `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `id_sensor` int DEFAULT NULL,
-  `id_type` int DEFAULT NULL
+CREATE TABLE `alertes_globales` (
+  `id_alerte` int NOT NULL,
+  `id_capteur` int DEFAULT NULL,
+  `description` varchar(255) NOT NULL,
+  `niveau` enum('faible','moyen','critique') NOT NULL,
+  `date_creation` datetime DEFAULT CURRENT_TIMESTAMP,
+  `statut` enum('en attente','résolu') DEFAULT 'en attente'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `camera`
+-- Table structure for table `alertes_locales`
 --
 
-CREATE TABLE `camera` (
+CREATE TABLE `alertes_locales` (
+  `id_alerte` int NOT NULL,
+  `id_camera` int DEFAULT NULL,
+  `description` varchar(255) NOT NULL,
+  `date_signalement` datetime DEFAULT CURRENT_TIMESTAMP,
+  `statut` enum('en attente','résolu') DEFAULT 'en attente'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `caméras`
+--
+
+CREATE TABLE `caméras` (
   `id_camera` int NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `ip` varchar(15) NOT NULL,
-  `port` int NOT NULL,
-  `description` varchar(255) DEFAULT NULL
+  `emplacement` varchar(255) NOT NULL,
+  `statut` tinyint(1) NOT NULL DEFAULT '1',
+  `date_maj` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data for table `camera`
+-- Dumping data for table `caméras`
 --
 
-INSERT INTO `camera` (`id_camera`, `name`, `ip`, `port`, `description`) VALUES
-(1, 'Caméra Hall', '192.168.1.10', 8080, 'Caméra principale dans le hall'),
-(2, 'Caméra Parking', '192.168.1.11', 8081, 'Caméra extérieure pour le parking'),
-(3, 'Caméra Salle de contrôle', '192.168.1.12', 8082, 'Caméra dans la salle de contrôle');
+INSERT INTO `caméras` (`id_camera`, `emplacement`, `statut`, `date_maj`) VALUES
+(1, 'Entrée Principale', 1, '2024-12-17 16:10:58'),
+(2, 'Couloir Nord', 1, '2024-12-17 16:10:58'),
+(3, 'Parking Sous-sol', 1, '2024-12-17 16:10:58');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `sensor`
+-- Table structure for table `capteurs`
 --
 
-CREATE TABLE `sensor` (
-  `id_sensor` int NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `description` varchar(255) DEFAULT NULL,
-  `state` tinyint(1) NOT NULL DEFAULT '0',
-  `id_type` int DEFAULT NULL
+CREATE TABLE `capteurs` (
+  `id_capteur` int NOT NULL,
+  `nom_capteur` varchar(255) NOT NULL,
+  `type_capteur` int DEFAULT NULL,
+  `departement` varchar(255) DEFAULT NULL,
+  `statut` tinyint(1) NOT NULL DEFAULT '0',
+  `date_derniere_maj` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data for table `sensor`
+-- Dumping data for table `capteurs`
 --
 
-INSERT INTO `sensor` (`id_sensor`, `name`, `description`, `state`, `id_type`) VALUES
-(1, 'Capteur Hall Principal', 'Détecte les mouvements dans le hall', 0, 1),
-(2, 'Capteur Porte Entrée', 'Surveille la porte principale', 0, 2),
-(3, 'Capteur Présence Bureau', 'Présence dans la salle de contrôle', 0, 3);
+INSERT INTO `capteurs` (`id_capteur`, `nom_capteur`, `type_capteur`, `departement`, `statut`, `date_derniere_maj`) VALUES
+(1, 'Capteur Sécurité Entrée', 3, 'Sécurité', 3, '2024-12-17 16:10:58'),
+(2, 'Capteur Sécurité Couloir', 3, 'Sécurité', 3, '2024-12-17 16:10:58'),
+(3, 'Capteur Sécurité Parking', 3, 'Sécurité', 3, '2024-12-17 16:10:58');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `sensor_type`
+-- Table structure for table `capteurs_intrusion`
 --
 
-CREATE TABLE `sensor_type` (
-  `id_type` int NOT NULL,
-  `name` varchar(255) NOT NULL
+CREATE TABLE `capteurs_intrusion` (
+  `id_capteur` int NOT NULL,
+  `emplacement` varchar(255) NOT NULL,
+  `niveau_alerte` tinyint(1) NOT NULL DEFAULT '0',
+  `date_signalement` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data for table `sensor_type`
+-- Dumping data for table `capteurs_intrusion`
 --
 
-INSERT INTO `sensor_type` (`id_type`, `name`) VALUES
-(1, 'Capteur de mouvement'),
-(2, 'Capteur de porte'),
-(3, 'Capteur de présence');
+INSERT INTO `capteurs_intrusion` (`id_capteur`, `emplacement`, `niveau_alerte`, `date_signalement`) VALUES
+(1, 'Entrée Principale', 0, '2024-12-17 16:10:58'),
+(2, 'Couloir Nord', 0, '2024-12-17 16:10:58'),
+(3, 'Parking Sous-sol', 0, '2024-12-17 16:10:58');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `type_alert`
+-- Table structure for table `rapports_globales`
 --
 
-CREATE TABLE `type_alert` (
-  `id_type` int NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `priority` int NOT NULL,
-  `message` varchar(255) NOT NULL
+CREATE TABLE `rapports_globales` (
+  `id_rapport` int NOT NULL,
+  `departement` varchar(255) NOT NULL,
+  `periode` enum('quotidienne','hebdomadaire') NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `date_creation` datetime DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `type_capteur`
+--
+
+CREATE TABLE `type_capteur` (
+  `id_type_capteur` int NOT NULL,
+  `Type` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data for table `type_alert`
+-- Dumping data for table `type_capteur`
 --
 
-INSERT INTO `type_alert` (`id_type`, `name`, `priority`, `message`) VALUES
-(1, 'Intrusion détectée', 3, 'Vérifiez immédiatement les caméras'),
-(2, 'Mouvement suspect', 2, 'Surveillez la zone concernée'),
-(3, 'Capteur défectueux', 1, 'Vérifiez le capteur et réinitialisez');
+INSERT INTO `type_capteur` (`id_type_capteur`, `Type`) VALUES
+(1, 'trafic'),
+(2, 'énergie'),
+(3, 'sécurité'),
+(4, 'eau');
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `alert`
+-- Indexes for table `alertes_globales`
 --
-ALTER TABLE `alert`
-  ADD PRIMARY KEY (`id_alert`),
-  ADD KEY `id_sensor` (`id_sensor`),
-  ADD KEY `id_type` (`id_type`);
+ALTER TABLE `alertes_globales`
+  ADD PRIMARY KEY (`id_alerte`),
+  ADD KEY `id_capteur` (`id_capteur`);
 
 --
--- Indexes for table `camera`
+-- Indexes for table `alertes_locales`
 --
-ALTER TABLE `camera`
+ALTER TABLE `alertes_locales`
+  ADD PRIMARY KEY (`id_alerte`),
+  ADD KEY `id_camera` (`id_camera`);
+
+--
+-- Indexes for table `caméras`
+--
+ALTER TABLE `caméras`
   ADD PRIMARY KEY (`id_camera`);
 
 --
--- Indexes for table `sensor`
+-- Indexes for table `capteurs`
 --
-ALTER TABLE `sensor`
-  ADD PRIMARY KEY (`id_sensor`),
-  ADD KEY `id_type` (`id_type`);
+ALTER TABLE `capteurs`
+  ADD PRIMARY KEY (`id_capteur`),
+  ADD KEY `type_capteur` (`type_capteur`);
 
 --
--- Indexes for table `sensor_type`
+-- Indexes for table `capteurs_intrusion`
 --
-ALTER TABLE `sensor_type`
-  ADD PRIMARY KEY (`id_type`);
+ALTER TABLE `capteurs_intrusion`
+  ADD PRIMARY KEY (`id_capteur`);
 
 --
--- Indexes for table `type_alert`
+-- Indexes for table `rapports_globales`
 --
-ALTER TABLE `type_alert`
-  ADD PRIMARY KEY (`id_type`);
+ALTER TABLE `rapports_globales`
+  ADD PRIMARY KEY (`id_rapport`);
+
+--
+-- Indexes for table `type_capteur`
+--
+ALTER TABLE `type_capteur`
+  ADD PRIMARY KEY (`id_type_capteur`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT for table `alert`
+-- AUTO_INCREMENT for table `alertes_globales`
 --
-ALTER TABLE `alert`
-  MODIFY `id_alert` int NOT NULL AUTO_INCREMENT;
+ALTER TABLE `alertes_globales`
+  MODIFY `id_alerte` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `camera`
+-- AUTO_INCREMENT for table `alertes_locales`
 --
-ALTER TABLE `camera`
+ALTER TABLE `alertes_locales`
+  MODIFY `id_alerte` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `caméras`
+--
+ALTER TABLE `caméras`
   MODIFY `id_camera` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `sensor`
+-- AUTO_INCREMENT for table `capteurs`
 --
-ALTER TABLE `sensor`
-  MODIFY `id_sensor` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+ALTER TABLE `capteurs`
+  MODIFY `id_capteur` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `sensor_type`
+-- AUTO_INCREMENT for table `rapports_globales`
 --
-ALTER TABLE `sensor_type`
-  MODIFY `id_type` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `type_alert`
---
-ALTER TABLE `type_alert`
-  MODIFY `id_type` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+ALTER TABLE `rapports_globales`
+  MODIFY `id_rapport` int NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
 --
 
 --
--- Constraints for table `alert`
+-- Constraints for table `alertes_globales`
 --
-ALTER TABLE `alert`
-  ADD CONSTRAINT `alert_ibfk_1` FOREIGN KEY (`id_sensor`) REFERENCES `sensor` (`id_sensor`),
-  ADD CONSTRAINT `alert_ibfk_2` FOREIGN KEY (`id_type`) REFERENCES `type_alert` (`id_type`);
+ALTER TABLE `alertes_globales`
+  ADD CONSTRAINT `alertes_globales_ibfk_1` FOREIGN KEY (`id_capteur`) REFERENCES `capteurs` (`id_capteur`);
 
 --
--- Constraints for table `sensor`
+-- Constraints for table `alertes_locales`
 --
-ALTER TABLE `sensor`
-  ADD CONSTRAINT `sensor_ibfk_1` FOREIGN KEY (`id_type`) REFERENCES `sensor_type` (`id_type`);
+ALTER TABLE `alertes_locales`
+  ADD CONSTRAINT `alertes_locales_ibfk_1` FOREIGN KEY (`id_camera`) REFERENCES `caméras` (`id_camera`);
+
+--
+-- Constraints for table `capteurs`
+--
+ALTER TABLE `capteurs`
+  ADD CONSTRAINT `capteurs_ibfk_1` FOREIGN KEY (`type_capteur`) REFERENCES `type_capteur` (`id_type_capteur`);
+
+--
+-- Constraints for table `capteurs_intrusion`
+--
+ALTER TABLE `capteurs_intrusion`
+  ADD CONSTRAINT `capteurs_intrusion_ibfk_1` FOREIGN KEY (`id_capteur`) REFERENCES `capteurs` (`id_capteur`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

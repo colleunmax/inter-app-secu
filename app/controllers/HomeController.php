@@ -3,8 +3,8 @@
  * Classe HomeController qui affiche la page principale et gère les caméras et capteurs.
  */
 
-require_once '../app/models/Camera.php';
-require_once '../app/models/Sensor.php';
+require_once '../app/models/camera.php';
+require_once '../app/models/sensor.php';
 
 class HomeController {
     public function index() {

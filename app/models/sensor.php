@@ -1,9 +1,9 @@
 <?php
 /**
- * Classe Sensor qui gère les capteurs avec des méthodes CRUD en base de données.
+ * Classe Sensor pour gérer les capteurs globaux et d'intrusion.
  */
 
-require_once '../config.php';
+require_once __DIR__ . '/../../config.php';
 
 class Sensor {
     private $pdo;
@@ -12,19 +12,32 @@ class Sensor {
         $this->pdo = getPDOConnection();
     }
 
+    // Récupérer tous les capteurs
     public function getAll() {
-        $stmt = $this->pdo->query("SELECT * FROM sensor");
+        $stmt = $this->pdo->query("
+            SELECT C.id_capteur, C.nom_capteur, C.statut, CI.emplacement, CI.niveau_alerte
+            FROM capteurs AS C
+            LEFT JOIN capteurs_intrusion AS CI ON C.id_capteur = CI.id_capteur
+        ");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function add($name) {
-        $stmt = $this->pdo->prepare("INSERT INTO sensor (name, state) VALUES (:name, 0)");
-        $stmt->execute(['name' => $name]);
+    // Ajouter un capteur
+    public function add($nom_capteur, $type_capteur, $departement) {
+        $stmt = $this->pdo->prepare("
+            INSERT INTO capteurs (nom_capteur, type_capteur, departement) 
+            VALUES (:nom_capteur, :type_capteur, :departement)
+        ");
+        $stmt->execute([
+            'nom_capteur' => $nom_capteur,
+            'type_capteur' => $type_capteur,
+            'departement' => $departement
+        ]);
     }
 
+    // Supprimer un capteur
     public function delete($id) {
-        $stmt = $this->pdo->prepare("DELETE FROM sensor WHERE id_sensor = :id");
+        $stmt = $this->pdo->prepare("DELETE FROM capteurs WHERE id_capteur = :id");
         $stmt->execute(['id' => $id]);
     }
 }
-?>

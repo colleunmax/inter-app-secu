@@ -5,13 +5,13 @@
  */
 
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'db_local_3');
+define('DB_NAME', 'security_db'); 
 define('DB_USER', 'root');
 define('DB_PASS', '');
 
 function getPDOConnection() {
     try {
-        return new PDO('mysql:host=localhost;dbname=db_local_3', 'root', '', [
+        return new PDO('mysql:host=' . DB_HOST . ';dbname=' . DB_NAME, DB_USER, DB_PASS, [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
         ]);
     } catch (PDOException $e) {
