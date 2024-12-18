@@ -17,30 +17,42 @@
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($_POST['add_camera'])) {
             $emplacement = $_POST['camera_emplacement'];
-            if (!empty($emplacement)) {
+
+            if (!empty($emplacement) && preg_match('/^[a-zA-ZÀ-ÿ\s]{1,20}$/u', $emplacement)) {
                 $cameraModel->add($emplacement);
+            } else {
+                echo "<p style='color:red;'>L'emplacement de nouvelle caméra la  doit contenir 
+                uniquement des lettres et être limité à 20 caractères.</p>";
             }
         }
-
+    
         if (isset($_POST['delete_camera'])) {
             $id = (int)$_POST['camera_id'];
             $cameraModel->delete($id);
         }
+    }
 
-        if (isset($_POST['add_sensor'])) {
-            $nom = $_POST['sensor_nom'];
-            $type = $_POST['sensor_type'];
-            $departement = $_POST['sensor_departement'];
-            if (!empty($nom) && !empty($type) && !empty($departement)) {
+    if (isset($_POST['add_sensor'])) {
+        $nom = $_POST['sensor_nom'];
+        $type = $_POST['sensor_type'];
+        $departement = $_POST['sensor_departement'];
+
+        if (!empty($nom) && !empty($type) && !empty($departement)) {
+            if (preg_match('/^[a-zA-ZÀ-ÿ\s]{1,20}$/u', $departement)) {
                 $sensorModel->add($nom, $type, $departement);
+            } else {
+                echo "<p style='color:red;'>L'emplacement du capteur doit contenir uniquement des lettres, accents et espaces (max 20 caractères).</p>";
             }
+        } else {
+            echo "<p style='color:red;'>Tous les champs sont requis.</p>";
         }
+    }
+    
 
         if (isset($_POST['delete_sensor'])) {
             $id = (int)$_POST['sensor_id'];
             $sensorModel->delete($id);
         }
-    }
     
     $cameras = $cameraModel->getAll();
     $sensors = $sensorModel->getAll();
@@ -105,7 +117,9 @@
     <ul>
         <?php foreach ($cameras as $camera): ?>
             <li>
-                <?= htmlspecialchars($camera['emplacement']); ?> - Statut : <?= $camera['statut'] ? 'Actif' : 'Inactif'; ?>
+                <?= htmlspecialchars($camera['emplacement']); ?> - 
+                Statut : <?= $camera['statut'] ? 'Actif' : 'Inactif'; ?> - 
+                Date mise à jour : <?= $camera['date_maj']; ?>
                 <form method="POST" style="display:inline;">
                     <input type="hidden" name="camera_id" value="<?= $camera['id_camera']; ?>">
                     <button type="submit" name="delete_camera">Supprimer</button>

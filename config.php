@@ -5,7 +5,7 @@
  */
 
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'security_db'); 
+define('DB_NAME', 'security_db'); // Correction ici pour pointer vers security_db
 define('DB_USER', 'root');
 define('DB_PASS', '');
 
