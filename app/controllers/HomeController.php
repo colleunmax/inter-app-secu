@@ -17,7 +17,7 @@ class HomeController {
         $selectedCamera = $cameras[$cameraId - 1] ?? $cameras[0];
         $sensors = $sensorModel->getAll();
 
-        require_once dirname(__DIR__) . '/views/home.php';
+        require_once dirname(__DIR__) . '../../home.php';
     }
 }
 ?>
