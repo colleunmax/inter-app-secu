@@ -29,3 +29,10 @@ VALUES
 ('75', 202412, 'Rapport mensuel sur les températures', '2024-12-18'),
 ('92', 202412, 'Rapport sur les mouvements détectés', '2024-12-17'),
 ('93', 202412, 'Rapport sur la qualité de l’air', '2024-12-16');
+
+-- Insertion des données dans la table `Statistiques_Globales`
+INSERT INTO `Statistiques_Globales` (`departement`, `type_statistique`, `valeur`, `date_enregistrement`)
+VALUES 
+('75', 'Température', 25, '2024-12-18'),
+('92', 'Mouvement', 15, '2024-12-17'),
+('93', 'Pollution', 80, '2024-12-16');
