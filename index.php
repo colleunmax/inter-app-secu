@@ -1,4 +1,7 @@
 <?php
+
+require_once "config.php";
+
 session_start();
 
 $error_message = isset($_GET['error']) ? htmlspecialchars($_GET['error']) : '';

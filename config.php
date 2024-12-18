@@ -1,21 +1,26 @@
 <?php
-/**
- * Fichier de configuration global pour l'application.
- * Contient les paramètres de connexion à la base de données.
- */
+require_once __DIR__ . '/vendor/autoload.php';
 
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'security_db'); // Correction ici pour pointer vers security_db
-define('DB_USER', 'root');
-define('DB_PASS', '');
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
 
-function getPDOConnection() {
+
+function getPDO(string $host, string $dbName, string $user, string $password) {
     try {
-        return new PDO('mysql:host=' . DB_HOST . ';dbname=' . DB_NAME, DB_USER, DB_PASS, [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-        ]);
+        $options = [PDO::ATTR_ERRMODE => pdo::ERRMODE_EXCEPTION];
+        return new PDO('mysql:host='.$host.';dbname='.$dbName, $user, $password, $options);
     } catch (PDOException $e) {
-        die("Erreur de connexion : " . $e->getMessage());
+        die("Erreur de connexion a la DB.".$e->getMessage()());
     }
+}
+
+
+function getLocalPDO() {
+    return getPDO($_ENV["LOCAL_HOST"], $_ENV["LOCAL_DBNAME"], $_ENV["LOCAL_USERNAME"], $_ENV["LOCAL_PASSWORD"]);
+}
+
+
+function getGlobalPDO() {
+    return getPDO($_ENV["GLOBAL_HOST"], $_ENV["GLOBAL_DBNAME"], $_ENV["GLOBAL_USERNAME"], $_ENV["GLOBAL_PASSWORD"]);
 }
 ?>
