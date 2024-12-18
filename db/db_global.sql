@@ -11,11 +11,13 @@ SET time_zone = "+00:00";
 CREATE DATABASE IF NOT EXISTS smartcity_db;
 USE smartcity_db;
 
+
 -- Table structure for table `type_capteur`
 CREATE TABLE IF NOT EXISTS `Type_Capteur` (
   `id_type_capteur` INT PRIMARY KEY AUTO_INCREMENT,
   `type` VARCHAR(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 
 -- Table structure for table `capteurs`
 CREATE TABLE IF NOT EXISTS `Capteurs` (
@@ -29,6 +31,7 @@ CREATE TABLE IF NOT EXISTS `Capteurs` (
     FOREIGN KEY (`type_capteur`) REFERENCES `Type_Capteur`(`id_type_capteur`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
 -- Table structure for table `alertes_globales`
 CREATE TABLE IF NOT EXISTS `Alertes_Globales` (
   `id_alerte` INT PRIMARY KEY AUTO_INCREMENT,
@@ -41,6 +44,7 @@ CREATE TABLE IF NOT EXISTS `Alertes_Globales` (
     FOREIGN KEY (`id_capteur`) REFERENCES `Capteurs`(`id_capteur`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
 -- Table structure for table `rapports_globales`
 CREATE TABLE IF NOT EXISTS `Rapports_Globales` (
   `id_rapport` INT PRIMARY KEY AUTO_INCREMENT,
@@ -48,4 +52,14 @@ CREATE TABLE IF NOT EXISTS `Rapports_Globales` (
   `periode` INT NOT NULL,
   `description` VARCHAR(255) NOT NULL,
   `date_creation` DATE DEFAULT CURRENT_DATE NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+-- Table structure for table `rapports_globales`
+CREATE TABLE IF NOT EXISTS `Statistiques_Globales` (
+  `id_statistique` INT PRIMARY KEY AUTO_INCREMENT,
+  `departement` VARCHAR(10) NOT NULL,
+  `type_statistique` VARCHAR(16) NOT NULL,
+  `valeur` INT NOT NULL,
+  `date_enregistrement` DATE DEFAULT CURRENT_DATE NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
