@@ -5,7 +5,6 @@ error_reporting(E_ALL);
 ?>
 
 <?php
-session_start();
 require_once '../core/router.php';
 require_once '../core/database.php';
 require_once '../config.php';

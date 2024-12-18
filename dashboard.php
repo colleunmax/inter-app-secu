@@ -3,14 +3,13 @@
 	ini_set('display_startup_errors', 1);
 	error_reporting(E_ALL);
     
-    session_start();
     if (!isset($_SESSION['logged_in'])) {
         header('Location: login.php');
         exit();
     }
 
-    require_once '../app/models/camera.php';
-    require_once '../app/models/sensor.php';
+    require_once __DIR__ . '/app/models/camera.php';
+    require_once __DIR__ . '/app/models/sensor.php';    
 
     $cameraModel = new Camera();
     $sensorModel = new Sensor();
@@ -66,11 +65,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Gestion des Caméras et Capteurs</title>
-    <link rel="stylesheet" href="assets/style.css">
+    <link rel="stylesheet" href="public/assets/style.css">
 </head>
 <body>
 
-    <?php require_once '../app/views/templates/header.php'; ?>
+    <?php require_once __DIR__ . '/app/views/templates/header.php'; ?>
 
     <h1>Dashboard - Gestion des Caméras et Capteurs</h1>
 
@@ -145,6 +144,6 @@
         <button type="submit">Se déconnecter</button>
     </form>
 
-    <?php require_once '../app/views/templates/footer.php'; ?>
+    <?php require_once __DIR__ . '/app/views/templates/footer.php'; ?>
 </body>
 </html>
