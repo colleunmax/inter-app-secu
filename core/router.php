@@ -8,7 +8,6 @@ class Router {
         ini_set('display_startup_errors', 1);
         error_reporting(E_ALL);
 
-        // Récupération des paramètres de l'URL
         $this->controller = $_GET['controller'] ?? 'home';
         $this->action = $_GET['action'] ?? 'login';
     }
@@ -23,7 +22,7 @@ class Router {
                 $this->dashboardRoutes();
                 break;
 
-            case 'alert': // Nouvelle route pour alert
+            case 'alert':
                 $this->alertRoutes();
                 break;
 
@@ -35,14 +34,13 @@ class Router {
 
     private function homeRoutes() {
         if ($this->action === 'login') {
-            require_once __DIR__ . '/../home.php';
+            require_once __DIR__ . '/../index.php';
         } else {
             $this->error404();
         }
     }
 
     private function dashboardRoutes() {
-        // Vérification que la session est active
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
@@ -52,14 +50,13 @@ class Router {
                 header('Location: index.php?controller=home&action=login&error=' . urlencode('Veuillez vous connecter.'));
                 exit();
             }
-            require_once __DIR__ . '/../dashboard.php';
+            require_once __DIR__ . '/../page_dashboard.php';
         } else {
             $this->error404();
         }
     }
 
     private function alertRoutes() {
-        // Vérification que la session est active
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
@@ -69,7 +66,7 @@ class Router {
                 header('Location: index.php?controller=home&action=login&error=' . urlencode('Veuillez vous connecter.'));
                 exit();
             }
-            require_once __DIR__ . '/../alert.php';
+            require_once __DIR__ . '/../page_alert.php';
         } else {
             $this->error404();
         }

@@ -2,6 +2,7 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+
 // Vérification si l'utilisateur est connecté
 if (!isset($_SESSION['logged_in'])) {
     header('Location: login.php');
@@ -11,6 +12,7 @@ if (!isset($_SESSION['logged_in'])) {
 require_once __DIR__ . '/config.php';
 require_once 'app/models/sensor.php';
 require_once 'app/models/camera.php';
+require_once 'app/models/alert.php';
 
 // Connexions aux bases de données
 $pdo_security = getSecurityConnection();
@@ -19,21 +21,46 @@ $pdo_smartcity = getSmartcityConnection();
 // Modèles
 $cameraModel = new Camera($pdo_security);
 $sensorModel = new Sensor($pdo_security, $pdo_smartcity);
+$alertModel = new Alert($pdo_security);
 
 // Gestion des formulaires
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
+        // Ajouter une caméra
         if (isset($_POST['add_camera'])) {
             $cameraModel->add($_POST['camera_emplacement'], $_POST['camera_statut']);
         }
+
+        // Supprimer une caméra
         if (isset($_POST['delete_camera'])) {
             $cameraModel->delete((int)$_POST['camera_id']);
         }
+
+        // Ajouter un capteur
         if (isset($_POST['add_sensor'])) {
             $sensorModel->add($_POST['sensor_nom']);
         }
+
+        // Supprimer un capteur
         if (isset($_POST['delete_sensor'])) {
             $sensorModel->delete((int)$_POST['sensor_id']);
+        }
+
+        // Créer une alerte locale
+        if (isset($_POST['create_local_alert'])) {
+            $description = $_POST['alert_description'] ?? '';
+            $cameraId = $_POST['camera_id'] ?? null;
+
+            if (empty($description)) {
+                throw new Exception("La description de l'alerte est obligatoire.");
+            }
+
+            if (empty($cameraId)) {
+                throw new Exception("Une caméra doit être sélectionnée pour créer une alerte.");
+            }
+
+            $alertModel->createLocalAlert($cameraId, $description);
+            $success = "Alerte locale créée avec succès.";
         }
     } catch (Exception $e) {
         $error = $e->getMessage();
@@ -53,6 +80,14 @@ if (isset($_POST['camera_select'])) {
         }
     }
 }
+
+// Vidéos aléatoires pour les caméras
+$videoFiles = [
+    'assets/video_1.mp4',
+    'assets/video_2.mp4',
+    'assets/video_3.mp4',
+];
+$randomVideo = $videoFiles[array_rand($videoFiles)];
 ?>
 
 <!DOCTYPE html>
@@ -76,15 +111,17 @@ if (isset($_POST['camera_select'])) {
     <?php if (isset($error)): ?>
         <p style="color:red;"><?= htmlspecialchars($error) ?></p>
     <?php endif; ?>
+    <?php if (isset($success)): ?>
+        <p style="color:green;"><?= htmlspecialchars($success) ?></p>
+    <?php endif; ?>
 
-    <!-- Navigation -->
-    <h2>Navigation</h2>
-    <a href="../alert.php">Page d'Alertes</a>
-    <form method="POST" action="logout.php" style="margin-top: 10px;">
-        <button type="submit">Se déconnecter</button>
+    <!-- Bouton vers la page des alertes -->
+    <form method="GET" action="index.php" style="margin-top: 20px;">
+        <input type="hidden" name="controller" value="alert">
+        <input type="hidden" name="action" value="index">
+        <button type="submit">Aller à la page des alertes</button>
     </form>
-
-    <!-- Section Caméras -->
+    
     <h2>Caméras</h2>
     <form method="POST">
         <label for="camera_id">Choisir une caméra (actives) :</label>
@@ -102,9 +139,24 @@ if (isset($_POST['camera_select'])) {
     </form>
 
     <?php if ($selectedCamera): ?>
-        <h3>Caméra sélectionnée : <?= htmlspecialchars($selectedCamera['emplacement']) ?></h3>
-        <video src="assets/video_1.mp4" controls width="500"></video>
-    <?php endif; ?>
+    <h3>Caméra sélectionnée : <?= htmlspecialchars($selectedCamera['emplacement']) ?></h3>
+    <?php 
+        $videoPath = 'assets/video_' . $selectedCamera['id_video'] . '.mp4';
+        if (!file_exists($videoPath)) {
+            $videoPath = 'assets/default.mp4'; // Vidéo par défaut si la vidéo n'existe pas
+        }
+    ?>
+    <video src="<?= htmlspecialchars($videoPath) ?>" controls width="500"></video>
+
+    <!-- Formulaire pour créer une alerte locale -->
+    <h3>Créer une alerte locale</h3>
+    <form method="POST">
+        <input type="hidden" name="camera_id" value="<?= $selectedCamera['id_camera'] ?>">
+        <label for="alert_description">Description :</label>
+        <input type="text" name="alert_description" id="alert_description" maxlength="255" required>
+        <button type="submit" name="create_local_alert">Créer une alerte locale</button>
+    </form>
+<?php endif; ?>
 
     <h3>Ajouter une caméra</h3>
     <form method="POST">
@@ -169,6 +221,12 @@ if (isset($_POST['camera_select'])) {
         </tr>
         <?php endforeach; ?>
     </table>
+
+    <br>
+    
+    <form method="POST" action="logout.php">
+        <button type="submit">Se déconnecter</button>
+    </form>
 
     <?php require_once __DIR__ . '/app/views/templates/footer.php'; ?>
 </body>

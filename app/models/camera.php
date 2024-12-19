@@ -9,13 +9,10 @@ class Camera {
     }
 
     public function getAll() {
-        $stmt = $this->pdo->query("
-            SELECT id_camera, emplacement, statut, date_maj 
-            FROM caméras
-        ");
+        $stmt = $this->pdo->query("SELECT id_camera, emplacement, statut, date_maj, id_video FROM Caméras");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }    
-
+    }
+    
     public function add($emplacement, $statut) {
         if (!preg_match('/^[a-zA-ZÀ-ÿ\s]{1,20}$/u', $emplacement)) {
             throw new Exception("L'emplacement doit contenir uniquement des lettres (max 20 caractères).");

@@ -25,5 +25,25 @@ class Alert {
         ");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public function createLocalAlert($cameraId, $description) {
+        
+        $stmt = $this->pdo_security->prepare("
+            INSERT INTO alertes_locales (id_camera, description, date_signalement, statut)
+            VALUES (:cameraId, :description, NOW(), 1)
+        ");
+        $stmt->execute([
+            'cameraId' => $cameraId,
+            'description' => $description
+        ]);
+    }
+    public function resolveLocalAlert($alertId) {
+        $stmt = $this->pdo_security->prepare("
+            UPDATE alertes_locales
+            SET statut = 0
+            WHERE id_alerte = :id
+        ");
+        $stmt->execute(['id' => $alertId]);
+    }    
 }
 ?>
+

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 18, 2024 at 07:06 PM
+-- Generation Time: Dec 19, 2024 at 09:59 AM
 -- Server version: 11.6.2-MariaDB-log
 -- PHP Version: 8.1.10
 
@@ -35,6 +35,13 @@ CREATE TABLE `alertes_locales` (
   `statut` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
+--
+-- Dumping data for table `alertes_locales`
+--
+
+INSERT INTO `alertes_locales` (`id_alerte`, `id_camera`, `description`, `date_signalement`, `statut`) VALUES
+(1, 3, 'n', '2024-12-19', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -45,6 +52,7 @@ CREATE TABLE `caméras` (
   `id_camera` int(11) NOT NULL,
   `emplacement` varchar(255) NOT NULL,
   `statut` tinyint(1) NOT NULL DEFAULT 0,
+  `id_video` int(11) DEFAULT NULL,
   `date_maj` date NOT NULL DEFAULT curdate()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
@@ -52,10 +60,20 @@ CREATE TABLE `caméras` (
 -- Dumping data for table `caméras`
 --
 
-INSERT INTO `caméras` (`id_camera`, `emplacement`, `statut`, `date_maj`) VALUES
-(1, 'Entrée principale', 1, '2024-12-18'),
-(2, 'Parking sous-terrain', 1, '2024-12-17'),
-(3, 'Couloir des bureaux', 1, '2024-12-16');
+INSERT INTO `caméras` (`id_camera`, `emplacement`, `statut`, `id_video`, `date_maj`) VALUES
+(1, 'Entrée principale', 1, 3, '2024-12-18'),
+(2, 'Parking sous-terrain', 1, 2, '2024-12-17'),
+(3, 'Couloir des bureaux', 1, 3, '2024-12-16');
+
+--
+-- Triggers `caméras`
+--
+DELIMITER $$
+CREATE TRIGGER `before_insert_cameras` BEFORE INSERT ON `caméras` FOR EACH ROW BEGIN
+  SET NEW.id_video = FLOOR(1 + (RAND() * 3)); -- Random entre 1 et 3
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -110,13 +128,13 @@ ALTER TABLE `capteurs_intrusion`
 -- AUTO_INCREMENT for table `alertes_locales`
 --
 ALTER TABLE `alertes_locales`
-  MODIFY `id_alerte` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_alerte` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `caméras`
 --
 ALTER TABLE `caméras`
-  MODIFY `id_camera` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_camera` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `capteurs_intrusion`
