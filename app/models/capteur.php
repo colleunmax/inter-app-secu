@@ -1,8 +1,19 @@
 <?php
+/**
+ * capteur.php
+ *
+ * Ce fichier gère les capteurs d'intrusion dans le système.
+ * Il contient des fonctions pour ajouter, modifier, supprimer et surveiller les capteurs.
+ * Les capteurs sont d'abord créés en auto-incrémentation dans la base de données globale, puis créés 
+ * localement avec leur ID dans la table globale.
+ * Les capteurs sont connectés à des alertes globales en fonction de leur niveau d'alerte.
+ * Ce fichier utilise deux connexions à la base de données (sécurité et smartcity).
+ */
+
 require_once __DIR__ . '/../../config.php';
 require_once 'Alert.php'; 
 
-class Sensor {
+class Capteur {
     private $pdo_security;
     private $pdo_smartcity;
     private $alert;

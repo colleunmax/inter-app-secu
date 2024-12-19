@@ -1,4 +1,13 @@
 <?php
+/**
+ * router.php
+ *
+ * Ce fichier gère le routage des requêtes dans l'application.
+ * Il mappe les URL aux contrôleurs et aux méthodes appropriées.
+ * Les requêtes sont analysées et dirigées vers la logique correspondante.
+ * Ce fichier est essentiel pour la navigation dans l'application.
+ */
+
 class Router {
     private $controller;
     private $action;

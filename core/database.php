@@ -1,4 +1,13 @@
 <?php
+/**
+ * database.php
+ *
+ * Ce fichier contient les connexions à la base de données.
+ * Deux connexions principales sont configurées : une pour la sécurité et une pour le système smartcity.
+ * Les fonctions incluent la gestion des exceptions liées à la base de données.
+ * C'est un fichier central pour toutes les opérations de base de données.
+ */
+
 require_once '../config.php';
 
 class Database {

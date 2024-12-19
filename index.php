@@ -1,4 +1,15 @@
 <?php
+/**
+* index.php
+*
+* Ce fichier représente une page de connexion pour l'application.
+* Il vérifie la présence d'un message d'erreur et l'affiche si nécessaire.
+* Une session sécurisée est utilisée pour générer un jeton CSRF et éviter les attaques CSRF.
+* Un formulaire HTML est présenté pour permettre à l'utilisateur d'entrer ses identifiants 
+* (nom d'utilisateur et mot de passe).
+* Les champs du formulaire sont protégés avec des attributs HTML `maxlength` et `required`.
+* Le formulaire envoie les données en méthode POST au fichier `login.php` pour authentification.
+*/
 
 $error_message = isset($_GET['error']) ? htmlspecialchars($_GET['error']) : '';
 

@@ -1,4 +1,13 @@
 <?php
+/**
+ * camera.php
+ *
+ * Ce fichier contient la logique pour gérer les caméras dans le système.
+ * Les fonctions incluent l'ajout, la modification, la suppression et la récupération des données des caméras.
+ * Les caméras sont liées aux alertes et peuvent être sélectionnées pour créer des alertes locales.
+ * Utilise la base de données pour stocker les informations des caméras.
+ */
+
 require_once __DIR__ . '/../../config.php';
 
 class Camera {

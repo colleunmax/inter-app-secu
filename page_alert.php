@@ -1,4 +1,13 @@
 <?php
+/**
+ * page_alert.php
+ *
+ * Ce fichier affiche la liste des alertes globales et locales dans l'interface utilisateur.
+ * Il fournit des fonctionnalités pour visualiser, résoudre ou supprimer les alertes.
+ * Les données sont extraites de la base de données via les modèles.
+ * Ce fichier est une partie essentielle du tableau de bord.
+ */
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -48,6 +57,7 @@ $localAlerts = $alertModel->getLocalAlerts();
         th, td { padding: 10px; text-align: center; }
         h1, h2 { text-align: left; }
     </style>
+    <link rel="stylesheet" href="assets/css/style.css?v=1.1">
 </head>
 <body>
     <?php require_once __DIR__ . '/app/views/templates/header.php'; ?>

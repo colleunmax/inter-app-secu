@@ -1,6 +1,10 @@
 <?php
 /**
- * Fichier de configuration pour les connexions aux bases de données.
+ * config.php
+ *
+ * Ce fichier contient les configurations principales de l'application.
+ * Les paramètres incluent les connexions à la base de données et d'autres constantes globales.
+ * Il est inclus dans presque tous les fichiers pour assurer une configuration centralisée.
  */
 
 define('DB_SECURITY_HOST', 'localhost');

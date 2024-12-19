@@ -1,6 +1,11 @@
 <?php
 /**
- * Classe AdminController qui gère les fonctionnalités liées aux administrateurs.
+ * AdminController.php
+ *
+ * Ce fichier contient le contrôleur pour gérer les opérations d'administration.
+ * Il traite les demandes liées à la gestion des utilisateurs et des configurations du système.
+ * Les principales fonctions incluent la gestion des utilisateurs, des droits d'accès, et la surveillance des activités.
+ * Ce contrôleur est appelé via des routes spécifiques définies dans le routeur.
  */
 
 require_once '../app/models/camera.php';

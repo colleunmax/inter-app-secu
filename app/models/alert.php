@@ -1,4 +1,13 @@
 <?php
+/**
+ * alert.php
+ *
+ * Ce fichier gère les alertes locales et globales.
+ * Il inclut des classes et des fonctions pour créer, afficher, mettre à jour et supprimer des alertes.
+ * Les alertes sont liées aux capteurs ou aux caméras dans le système.
+ * Ce fichier utilise la connexion à la base de données pour enregistrer les alertes.
+ */
+
 require_once __DIR__ . '/../../config.php';
 
 class Alert {

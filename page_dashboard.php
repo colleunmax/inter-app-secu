@@ -1,4 +1,21 @@
-<?php   
+<?php  
+/**
+ * page_dashboard.php
+ *
+ * Ce fichier représente le tableau de bord principal de l'application de gestion.
+ * Il offre un aperçu général des caméras, des capteurs et des alertes enregistrées dans le système.
+ * Les données affichées dans cette page sont récupérées dynamiquement via les modèles 
+ * correspondants (`camera`, `sensor`, `alert`) en se connectant aux bases de données.
+ * Les utilisateurs peuvent interagir avec les éléments affichés pour effectuer des actions 
+ * comme activer/désactiver des capteurs, créer ou supprimer des alertes, et modifier les informations des caméras.
+ * Le tableau de bord est conçu pour offrir une vue centralisée et faciliter la gestion des équipements 
+ * et des événements en cours.
+ * Ce fichier inclut également des mécanismes pour gérer les formulaires et les messages d'erreur ou de succès.
+ * La sécurité est renforcée grâce à des sessions, vérifiant que seul un utilisateur authentifié peut accéder à cette page.
+ * Enfin, ce fichier agit comme un point clé de l'interface utilisateur interactive, 
+ * permettant une gestion intuitive des ressources du système.
+ */
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -9,7 +26,7 @@ if (!isset($_SESSION['logged_in'])) {
 }
 
 require_once __DIR__ . '/config.php';
-require_once 'app/models/sensor.php';
+require_once 'app/models/capteur.php';
 require_once 'app/models/camera.php';
 require_once 'app/models/alert.php';
 
@@ -17,7 +34,7 @@ $pdo_security = getSecurityConnection();
 $pdo_smartcity = getSmartcityConnection();
 
 $cameraModel = new Camera($pdo_security);
-$sensorModel = new Sensor($pdo_security, $pdo_smartcity);
+$sensorModel = new Capteur($pdo_security, $pdo_smartcity);
 $alertModel = new Alert($pdo_security);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -113,6 +130,7 @@ $randomVideo = $videoFiles[array_rand($videoFiles)];
         th, td { padding: 10px; text-align: center; }
         h1, h2 { text-align: left; }
     </style>
+    <link rel="stylesheet" href="assets/css/style.css?v=1.1">
 </head>
 <body>
     <?php require_once __DIR__ . '/app/views/templates/header.php'; ?>

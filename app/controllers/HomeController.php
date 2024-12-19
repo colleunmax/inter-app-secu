@@ -1,6 +1,11 @@
 <?php
 /**
- * Classe HomeController qui affiche la page principale et gère les caméras et capteurs.
+ * HomeController.php
+ *
+ * Ce fichier contient le contrôleur principal pour la page d'accueil de l'application.
+ * Il gère l'affichage de la page d'accueil et la logique principale pour les utilisateurs.
+ * Les données affichées sont souvent extraites de la base de données pour montrer des informations dynamiques.
+ * C'est le point d'entrée pour les utilisateurs après leur connexion.
  */
 
 require_once '../app/models/camera.php';

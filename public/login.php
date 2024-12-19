@@ -1,4 +1,12 @@
 <?php
+/**
+ * login.php
+ *
+ * Ce fichier gère le processus de connexion des utilisateurs.
+ * Il vérifie les identifiants dans la base de données et crée des sessions utilisateur.
+ * En cas d'échec, il affiche des messages d'erreur.
+ * Il redirige les utilisateurs vers le tableau de bord après une connexion réussie.
+ */
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
