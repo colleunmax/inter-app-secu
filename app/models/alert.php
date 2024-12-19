@@ -36,6 +36,16 @@ class Alert {
             'description' => $description
         ]);
     }
+
+    public function deleteLocalAlert($alertId) {
+        try {
+            $stmt = $this->pdo_security->prepare("DELETE FROM alertes_locales WHERE id_alerte = :id");
+            $stmt->execute(['id' => $alertId]);
+        } catch (PDOException $e) {
+            throw new Exception("Erreur lors de la suppression de l'alerte locale : " . $e->getMessage());
+        }
+    }
+    
     public function resolveLocalAlert($alertId) {
         $stmt = $this->pdo_security->prepare("
             UPDATE alertes_locales

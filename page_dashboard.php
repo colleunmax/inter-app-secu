@@ -33,7 +33,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Supprimer une caméra
         if (isset($_POST['delete_camera'])) {
-            $cameraModel->delete((int)$_POST['camera_id']);
+            try {
+                $cameraId = (int)$_POST['camera_id'];
+                
+                // Suppression de la caméra
+                $cameraModel->delete($cameraId);
+                
+                // Message de succès
+                $success = "Caméra supprimée avec succès.";
+            } catch (PDOException $pdoException) {
+                // Si une contrainte d'intégrité est violée
+                if ($pdoException->getCode() === '23000') {
+                    $error = "Impossible de supprimer la caméra car elle est liée à une ou plusieurs alertes.";
+                } else {
+                    // Autres erreurs de base de données
+                    $error = "Une erreur est survenue lors de la suppression de la caméra.";
+                }
+            } catch (Exception $deleteError) {
+                // Message d'erreur générique pour d'autres types d'erreurs
+                $error = $deleteError->getMessage();
+            }
         }
 
         // Ajouter un capteur

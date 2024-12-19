@@ -7,11 +7,12 @@ class Router {
         ini_set('display_errors', 1);
         ini_set('display_startup_errors', 1);
         error_reporting(E_ALL);
-
+    
+        // Par défaut, chargez la page d'accueil (login ou autre contenu par défaut)
         $this->controller = $_GET['controller'] ?? 'home';
         $this->action = $_GET['action'] ?? 'login';
     }
-
+    
     public function run() {
         switch ($this->controller) {
             case 'home':
@@ -34,11 +35,12 @@ class Router {
 
     private function homeRoutes() {
         if ($this->action === 'login') {
-            require_once __DIR__ . '/../index.php';
+            require_once __DIR__ . '/../index.php'; // Charge la page par défaut
         } else {
             $this->error404();
         }
     }
+    
 
     private function dashboardRoutes() {
         if (session_status() == PHP_SESSION_NONE) {

@@ -63,6 +63,6 @@ class Sensor {
         } catch (PDOException $e) {
             throw new Exception("Erreur lors de la suppression du capteur : " . $e->getMessage());
         }
-    }
+    }      
 }
 ?>
