@@ -1,14 +1,16 @@
 <?php
 require_once __DIR__ . '/../../config.php';
+require_once 'Alert.php'; 
 
 class Sensor {
     private $pdo_security;
     private $pdo_smartcity;
+    private $alert;
 
-    public function __construct() {
-        // Connexions aux deux bases de données
-        $this->pdo_security = getSecurityConnection();
-        $this->pdo_smartcity = getSmartcityConnection();
+    public function __construct($pdo_security, $pdo_smartcity) {
+        $this->pdo_security = $pdo_security;
+        $this->pdo_smartcity = $pdo_smartcity;
+        $this->alert = new Alert(); 
     }
 
     public function getAll() {
@@ -17,23 +19,19 @@ class Sensor {
     }
 
     public function add($nom) {
-        // Vérification avec regex
         if (!preg_match('/^[a-zA-ZÀ-ÿ\s]{1,20}$/u', $nom)) {
             throw new Exception("Le nom doit contenir uniquement des lettres et être limité à 20 caractères.");
         }
 
         try {
-            // Étape 1 : Insérer dans la base "smartcity_db"
             $stmt = $this->pdo_smartcity->prepare("
                 INSERT INTO capteurs (nom_capteur, departement, statut, type_capteur)
                 VALUES (:nom, 'Sécurité', 3, 3)
             ");
             $stmt->execute(['nom' => $nom]);
 
-            // Récupérer l'ID auto-incrémenté
             $idCapteur = $this->pdo_smartcity->lastInsertId();
 
-            // Étape 2 : Insérer dans la base "security_db" avec le même ID
             $stmtSecurity = $this->pdo_security->prepare("
                 INSERT INTO capteurs_intrusion (id_capteur, emplacement, niveau_alerte, date_signalement)
                 VALUES (:id, :emplacement, 0, NOW())
@@ -49,13 +47,11 @@ class Sensor {
 
     public function delete($id) {
         try {
-            // Supprimer de la table capteurs_intrusion
             $stmt = $this->pdo_security->prepare("
                 DELETE FROM capteurs_intrusion WHERE id_capteur = :id
             ");
             $stmt->execute(['id' => $id]);
 
-            // Supprimer également de la table capteurs dans "smartcity_db"
             $stmtSmartcity = $this->pdo_smartcity->prepare("
                 DELETE FROM capteurs WHERE id_capteur = :id
             ");
@@ -63,6 +59,32 @@ class Sensor {
         } catch (PDOException $e) {
             throw new Exception("Erreur lors de la suppression du capteur : " . $e->getMessage());
         }
-    }      
+    }
+
+    public function updateAlertLevel($id, $level) {
+        try {
+            $stmt = $this->pdo_security->prepare("
+                UPDATE capteurs_intrusion SET niveau_alerte = :niveau_alerte WHERE id_capteur = :id
+            ");
+            $stmt->execute([
+                'niveau_alerte' => $level,
+                'id' => $id
+            ]);
+
+            if ($level > 0) {
+                $stmtSensor = $this->pdo_security->prepare("
+                    SELECT emplacement FROM capteurs_intrusion WHERE id_capteur = :id
+                ");
+                $stmtSensor->execute(['id' => $id]);
+                $sensor = $stmtSensor->fetch(PDO::FETCH_ASSOC);
+
+                if ($sensor) {
+                    $this->alert->createGlobalAlert($id, "Capteur actif à l'emplacement : " . $sensor['emplacement']);
+                }
+            }
+        } catch (PDOException $e) {
+            throw new Exception("Erreur lors de la mise à jour du niveau d'alerte : " . $e->getMessage());
+        }
+    }
 }
 ?>

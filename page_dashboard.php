@@ -3,7 +3,6 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Vérification si l'utilisateur est connecté
 if (!isset($_SESSION['logged_in'])) {
     header('Location: login.php');
     exit();
@@ -14,58 +13,45 @@ require_once 'app/models/sensor.php';
 require_once 'app/models/camera.php';
 require_once 'app/models/alert.php';
 
-// Connexions aux bases de données
 $pdo_security = getSecurityConnection();
 $pdo_smartcity = getSmartcityConnection();
 
-// Modèles
 $cameraModel = new Camera($pdo_security);
 $sensorModel = new Sensor($pdo_security, $pdo_smartcity);
 $alertModel = new Alert($pdo_security);
 
-// Gestion des formulaires
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
-        // Ajouter une caméra
         if (isset($_POST['add_camera'])) {
             $cameraModel->add($_POST['camera_emplacement'], $_POST['camera_statut']);
         }
 
-        // Supprimer une caméra
         if (isset($_POST['delete_camera'])) {
             try {
                 $cameraId = (int)$_POST['camera_id'];
                 
-                // Suppression de la caméra
                 $cameraModel->delete($cameraId);
                 
-                // Message de succès
                 $success = "Caméra supprimée avec succès.";
             } catch (PDOException $pdoException) {
-                // Si une contrainte d'intégrité est violée
                 if ($pdoException->getCode() === '23000') {
                     $error = "Impossible de supprimer la caméra car elle est liée à une ou plusieurs alertes.";
                 } else {
-                    // Autres erreurs de base de données
                     $error = "Une erreur est survenue lors de la suppression de la caméra.";
                 }
             } catch (Exception $deleteError) {
-                // Message d'erreur générique pour d'autres types d'erreurs
                 $error = $deleteError->getMessage();
             }
         }
 
-        // Ajouter un capteur
         if (isset($_POST['add_sensor'])) {
             $sensorModel->add($_POST['sensor_nom']);
         }
 
-        // Supprimer un capteur
         if (isset($_POST['delete_sensor'])) {
             $sensorModel->delete((int)$_POST['sensor_id']);
         }
 
-        // Créer une alerte locale
         if (isset($_POST['create_local_alert'])) {
             $description = $_POST['alert_description'] ?? '';
             $cameraId = $_POST['camera_id'] ?? null;
@@ -80,6 +66,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $alertModel->createLocalAlert($cameraId, $description);
             $success = "Alerte locale créée avec succès.";
+        }
+
+        if (isset($_POST['toggle'])) {
+            $sensorId = (int)$_POST['sensor_id'];
+            $newLevel = $_POST['current_level'] == 1 ? 0 : 1; 
+            $sensorModel->updateAlertLevel($sensorId, $newLevel);
+            $success = $newLevel == 1 ? "Capteur activé avec succès." : "Capteur désactivé avec succès.";
         }
     } catch (Exception $e) {
         $error = $e->getMessage();
@@ -100,7 +93,6 @@ if (isset($_POST['camera_select'])) {
     }
 }
 
-// Vidéos aléatoires pour les caméras
 $videoFiles = [
     'assets/video_1.mp4',
     'assets/video_2.mp4',
@@ -134,7 +126,6 @@ $randomVideo = $videoFiles[array_rand($videoFiles)];
         <p style="color:green;"><?= htmlspecialchars($success) ?></p>
     <?php endif; ?>
 
-    <!-- Bouton vers la page des alertes -->
     <form method="GET" action="index.php" style="margin-top: 20px;">
         <input type="hidden" name="controller" value="alert">
         <input type="hidden" name="action" value="index">
@@ -162,12 +153,11 @@ $randomVideo = $videoFiles[array_rand($videoFiles)];
     <?php 
         $videoPath = 'assets/video_' . $selectedCamera['id_video'] . '.mp4';
         if (!file_exists($videoPath)) {
-            $videoPath = 'assets/default.mp4'; // Vidéo par défaut si la vidéo n'existe pas
+            $videoPath = 'assets/default.mp4';
         }
     ?>
     <video src="<?= htmlspecialchars($videoPath) ?>" controls width="500"></video>
 
-    <!-- Formulaire pour créer une alerte locale -->
     <h3>Créer une alerte locale</h3>
     <form method="POST">
         <input type="hidden" name="camera_id" value="<?= $selectedCamera['id_camera'] ?>">
@@ -211,7 +201,6 @@ $randomVideo = $videoFiles[array_rand($videoFiles)];
         <?php endforeach; ?>
     </table>
 
-    <!-- Section Capteurs -->
     <h2>Capteurs</h2>
     <h3>Ajouter un capteur</h3>
     <form method="POST">
@@ -225,6 +214,7 @@ $randomVideo = $videoFiles[array_rand($videoFiles)];
             <th>Emplacement</th>
             <th>État d'alerte</th>
             <th>Actions</th>
+            <th>Actions</th>
         </tr>
         <?php foreach ($sensors as $sensor): ?>
         <tr>
@@ -235,6 +225,15 @@ $randomVideo = $videoFiles[array_rand($videoFiles)];
                 <form method="POST" style="display:inline;">
                     <input type="hidden" name="sensor_id" value="<?= $sensor['id_capteur'] ?>">
                     <button type="submit" name="delete_sensor">Supprimer</button>
+                </form>
+            </td>
+            <td>    
+                <form method="POST" style="display:inline;">
+                    <input type="hidden" name="sensor_id" value="<?= $sensor['id_capteur'] ?>">
+                    <input type="hidden" name="current_level" value="<?= $sensor['niveau_alerte'] ?>">
+                    <button type="submit" name="toggle">
+                        <?= $sensor['niveau_alerte'] == 1 ? 'Désactiver' : 'Activer' ?>
+                    </button>
                 </form>
             </td>
         </tr>

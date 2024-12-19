@@ -3,13 +3,11 @@
  * Fichier de configuration pour les connexions aux bases de données.
  */
 
-// Paramètres pour la base security_db
 define('DB_SECURITY_HOST', 'localhost');
 define('DB_SECURITY_NAME', 'security_db');
 define('DB_SECURITY_USER', 'root');
 define('DB_SECURITY_PASS', '');
 
-// Paramètres pour la base smartcity_db
 define('DB_SMARTCITY_HOST', 'localhost');
 define('DB_SMARTCITY_NAME', 'smartcity_db');
 define('DB_SMARTCITY_USER', 'root');

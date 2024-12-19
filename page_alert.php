@@ -3,7 +3,6 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Vérification si l'utilisateur est connecté
 if (!isset($_SESSION['logged_in'])) {
     header('Location: login.php');
     exit();
@@ -12,21 +11,17 @@ if (!isset($_SESSION['logged_in'])) {
 require_once __DIR__ . '/config.php';
 require_once 'app/models/alert.php';
 
-// Connexions aux bases de données
 $pdo_security = getSecurityConnection();
 $alertModel = new Alert($pdo_security);
 
-// Gestion des formulaires
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
-        // Résolution d'une alerte
         if (isset($_POST['resolve_alert'])) {
             $alertId = (int)$_POST['alert_id'];
             $alertModel->resolveLocalAlert($alertId);
             $success = "Alerte résolue avec succès.";
         }
 
-        // Suppression d'une alerte
         if (isset($_POST['delete_alert'])) {
             $alertId = (int)$_POST['alert_id'];
             $alertModel->deleteLocalAlert($alertId);
@@ -37,7 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Récupération des alertes
 $globalAlerts = $alertModel->getGlobalAlerts();
 $localAlerts = $alertModel->getLocalAlerts();
 ?>
@@ -60,7 +54,6 @@ $localAlerts = $alertModel->getLocalAlerts();
 
     <h1>Page d'Alertes</h1>
 
-    <!-- Messages de succès ou d'erreur -->
     <?php if (isset($success)): ?>
         <p style="color:green;"><?= htmlspecialchars($success) ?></p>
     <?php endif; ?>
@@ -68,14 +61,12 @@ $localAlerts = $alertModel->getLocalAlerts();
         <p style="color:red;"><?= htmlspecialchars($error) ?></p>
     <?php endif; ?>
 
-    <!-- Bouton vers le Dashboard -->
     <form method="GET" action="index.php" style="margin-top: 20px;">
         <input type="hidden" name="controller" value="dashboard">
         <input type="hidden" name="action" value="index">
         <button type="submit">Retour au Dashboard</button>
     </form>
 
-    <!-- Table des alertes globales -->
     <h2>Alertes Globales</h2>
     <table>
         <tr>
@@ -98,7 +89,6 @@ $localAlerts = $alertModel->getLocalAlerts();
         <?php endforeach; ?>
     </table>
 
-    <!-- Table des alertes locales -->
     <h2>Alertes Locales</h2>
     <table>
         <tr>
@@ -118,13 +108,11 @@ $localAlerts = $alertModel->getLocalAlerts();
             <td><?= $alert['statut'] ? 'Actif' : 'Résolu' ?></td>
             <td>
                 <?php if ($alert['statut']): ?>
-                    <!-- Bouton pour marquer comme résolu -->
                     <form method="POST" style="display:inline;">
                         <input type="hidden" name="alert_id" value="<?= $alert['id_alerte'] ?>">
                         <button type="submit" name="resolve_alert">Résoudre</button>
                     </form>
                 <?php endif; ?>
-                <!-- Bouton pour supprimer -->
                 <form method="POST" style="display:inline;">
                     <input type="hidden" name="alert_id" value="<?= $alert['id_alerte'] ?>">
                     <button type="submit" name="delete_alert">Supprimer</button>
@@ -136,7 +124,6 @@ $localAlerts = $alertModel->getLocalAlerts();
 
     <br>
 
-    <!-- Bouton pour se déconnecter -->
     <form method="POST" action="logout.php">
         <button type="submit">Se déconnecter</button>
     </form>

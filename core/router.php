@@ -8,7 +8,6 @@ class Router {
         ini_set('display_startup_errors', 1);
         error_reporting(E_ALL);
     
-        // Par défaut, chargez la page d'accueil (login ou autre contenu par défaut)
         $this->controller = $_GET['controller'] ?? 'home';
         $this->action = $_GET['action'] ?? 'login';
     }
@@ -35,7 +34,7 @@ class Router {
 
     private function homeRoutes() {
         if ($this->action === 'login') {
-            require_once __DIR__ . '/../index.php'; // Charge la page par défaut
+            require_once __DIR__ . '/../index.php'; 
         } else {
             $this->error404();
         }

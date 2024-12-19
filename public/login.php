@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    if ($username === 'admin' && $password === 'test') {
+    if ($username === 'admin' && $password === 'QSDF') {
         $_SESSION['logged_in'] = true;
         header('Location: index.php?controller=dashboard&action=index');
         exit();
