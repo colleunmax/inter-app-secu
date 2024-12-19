@@ -1,26 +1,43 @@
 <?php
-require_once __DIR__ . '/vendor/autoload.php';
+/**
+ * Fichier de configuration pour les connexions aux bases de données.
+ */
 
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();
+// Paramètres pour la base security_db
+define('DB_SECURITY_HOST', 'localhost');
+define('DB_SECURITY_NAME', 'security_db');
+define('DB_SECURITY_USER', 'root');
+define('DB_SECURITY_PASS', '');
 
+// Paramètres pour la base smartcity_db
+define('DB_SMARTCITY_HOST', 'localhost');
+define('DB_SMARTCITY_NAME', 'smartcity_db');
+define('DB_SMARTCITY_USER', 'root');
+define('DB_SMARTCITY_PASS', '');
 
-function getPDO(string $host, string $dbName, string $user, string $password) {
+function getSecurityConnection() {
     try {
-        $options = [PDO::ATTR_ERRMODE => pdo::ERRMODE_EXCEPTION];
-        return new PDO('mysql:host='.$host.';dbname='.$dbName, $user, $password, $options);
+        return new PDO(
+            "mysql:host=" . DB_SECURITY_HOST . ";dbname=" . DB_SECURITY_NAME,
+            DB_SECURITY_USER,
+            DB_SECURITY_PASS,
+            [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+        );
     } catch (PDOException $e) {
-        die("Erreur de connexion a la DB.".$e->getMessage()());
+        die("Erreur de connexion à security_db : " . $e->getMessage());
     }
 }
 
-
-function getLocalPDO() {
-    return getPDO($_ENV["LOCAL_HOST"], $_ENV["LOCAL_DBNAME"], $_ENV["LOCAL_USERNAME"], $_ENV["LOCAL_PASSWORD"]);
-}
-
-
-function getGlobalPDO() {
-    return getPDO($_ENV["GLOBAL_HOST"], $_ENV["GLOBAL_DBNAME"], $_ENV["GLOBAL_USERNAME"], $_ENV["GLOBAL_PASSWORD"]);
+function getSmartcityConnection() {
+    try {
+        return new PDO(
+            "mysql:host=" . DB_SMARTCITY_HOST . ";dbname=" . DB_SMARTCITY_NAME,
+            DB_SMARTCITY_USER,
+            DB_SMARTCITY_PASS,
+            [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+        );
+    } catch (PDOException $e) {
+        die("Erreur de connexion à smartcity_db : " . $e->getMessage());
+    }
 }
 ?>
