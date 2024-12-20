@@ -37,17 +37,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($username_error || $password_error) {
         $error_message = $username_error ?: $password_error; 
-        header('Location: index.php?controller=home&action=login&error=' . urlencode($error_message));
+        header('Location: controller.php?controller=home&action=login&error=' . urlencode($error_message));
         exit();
     }
 
     if ($username === 'admin' && $password === 'QSDF') {
         $_SESSION['logged_in'] = true;
-        header('Location: index.php?controller=dashboard&action=index');
+        header('Location: ../controller.php?controller=dashboard&action=index');
         exit();
     } else {
         $error_message = "Identifiants incorrects. Veuillez réessayer.";
-        header('Location: index.php?controller=home&action=login&error=' . urlencode($error_message));
+        header('Location: ../controller.php?controller=home&action=login&error=' . urlencode($error_message));
         exit();
     }
 }

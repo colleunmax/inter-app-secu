@@ -51,6 +51,7 @@ $localAlerts = $alertModel->getLocalAlerts();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alertes</title>
+    <link rel="stylesheet" href="/public/styles.css">
     <style>
         table { width: 100%; border-collapse: collapse; }
         table, th, td { border: 1px solid black; }
