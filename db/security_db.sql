@@ -33,7 +33,7 @@ CREATE TABLE `alertes_locales` (
   `description` varchar(255) NOT NULL,
   `date_signalement` date DEFAULT curdate(),
   `statut` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 --
 -- Dumping data for table `alertes_locales`
@@ -45,31 +45,31 @@ INSERT INTO `alertes_locales` (`id_alerte`, `id_camera`, `description`, `date_si
 -- --------------------------------------------------------
 
 --
--- Table structure for table `caméras`
+-- Table structure for table `cameras`
 --
 
-CREATE TABLE `caméras` (
+CREATE TABLE `cameras` (
   `id_camera` int(11) NOT NULL,
   `emplacement` varchar(255) NOT NULL,
   `statut` tinyint(1) NOT NULL DEFAULT 0,
   `id_video` int(11) DEFAULT NULL,
   `date_maj` date NOT NULL DEFAULT curdate()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 --
--- Dumping data for table `caméras`
+-- Dumping data for table `cameras`
 --
 
-INSERT INTO `caméras` (`id_camera`, `emplacement`, `statut`, `id_video`, `date_maj`) VALUES
+INSERT INTO `cameras` (`id_camera`, `emplacement`, `statut`, `id_video`, `date_maj`) VALUES
 (1, 'Entrée principale', 1, 3, '2024-12-18'),
 (2, 'Parking sous-terrain', 1, 2, '2024-12-17'),
 (3, 'Couloir des bureaux', 1, 3, '2024-12-16');
 
 --
--- Triggers `caméras`
+-- Triggers `cameras`
 --
 DELIMITER $$
-CREATE TRIGGER `before_insert_cameras` BEFORE INSERT ON `caméras` FOR EACH ROW BEGIN
+CREATE TRIGGER `before_insert_cameras` BEFORE INSERT ON `cameras` FOR EACH ROW BEGIN
   SET NEW.id_video = FLOOR(1 + (RAND() * 3)); -- Random entre 1 et 3
 END
 $$
@@ -86,7 +86,7 @@ CREATE TABLE `capteurs_intrusion` (
   `emplacement` varchar(255) NOT NULL,
   `niveau_alerte` tinyint(1) NOT NULL DEFAULT 0,
   `date_signalement` date NOT NULL DEFAULT curdate()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 --
 -- Dumping data for table `capteurs_intrusion`
@@ -109,9 +109,9 @@ ALTER TABLE `alertes_locales`
   ADD KEY `fk_alertes_locales_cameras` (`id_camera`);
 
 --
--- Indexes for table `caméras`
+-- Indexes for table `cameras`
 --
-ALTER TABLE `caméras`
+ALTER TABLE `cameras`
   ADD PRIMARY KEY (`id_camera`);
 
 --
@@ -131,9 +131,9 @@ ALTER TABLE `alertes_locales`
   MODIFY `id_alerte` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `caméras`
+-- AUTO_INCREMENT for table `cameras`
 --
-ALTER TABLE `caméras`
+ALTER TABLE `cameras`
   MODIFY `id_camera` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
@@ -150,7 +150,7 @@ ALTER TABLE `capteurs_intrusion`
 -- Constraints for table `alertes_locales`
 --
 ALTER TABLE `alertes_locales`
-  ADD CONSTRAINT `fk_alertes_locales_cameras` FOREIGN KEY (`id_camera`) REFERENCES `caméras` (`id_camera`);
+  ADD CONSTRAINT `fk_alertes_locales_cameras` FOREIGN KEY (`id_camera`) REFERENCES `cameras` (`id_camera`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -22,7 +22,7 @@ class Alert {
     public function getGlobalAlerts() {
         $stmt = $this->pdo_smartcity->query("
             SELECT id_alerte, description, niveau, date_creation, statut, id_capteur 
-            FROM alertes_globales
+            FROM Alertes_Globales
         ");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -49,7 +49,7 @@ class Alert {
     public function createGlobalAlert($sensorId, $description) {
         try {
             $stmt = $this->pdo_smartcity->prepare("
-                INSERT INTO alertes_globales (description, niveau, date_creation, statut, id_capteur)
+                INSERT INTO Alertes_Globales (description, niveau, date_creation, statut, id_capteur)
                 VALUES (:description, 3, NOW(), 1, :id_capteur)
             ");
             $stmt->execute([

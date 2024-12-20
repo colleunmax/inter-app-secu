@@ -18,7 +18,7 @@ class Camera {
     }
 
     public function getAll() {
-        $stmt = $this->pdo->query("SELECT id_camera, emplacement, statut, date_maj, id_video FROM Caméras");
+        $stmt = $this->pdo->query("SELECT * FROM cameras");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
