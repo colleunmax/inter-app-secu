@@ -125,12 +125,6 @@ $randomVideo = $videoFiles[array_rand($videoFiles)];
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Gestion des Caméras et Capteurs</title>
     <link rel="stylesheet" href="/public/styles.css">
-    <style>
-        table { width: 100%; border-collapse: collapse; }
-        table, th, td { border: 1px solid black; }
-        th, td { padding: 10px; text-align: center; }
-        h1, h2 { text-align: left; }
-    </style>
     <link rel="stylesheet" href="assets/css/style.css?v=1.1">
 </head>
 <body>
@@ -216,7 +210,7 @@ $randomVideo = $videoFiles[array_rand($videoFiles)];
                     <td>
                         <form method="POST" style="display:inline;">
                             <input type="hidden" name="camera_id" value="<?= $camera['id_camera'] ?>">
-                            <button type="submit" name="delete_camera">Supprimer</button>
+                            <button type="submit" name="delete_camera">Del</button>
                         </form>
                     </td>
                 </tr>
@@ -227,12 +221,6 @@ $randomVideo = $videoFiles[array_rand($videoFiles)];
 
         <section id="sensor-section">
             <h2>Capteurs</h2>
-            <h3>Ajouter un capteur</h3>
-            <form method="POST">
-                <input type="text" name="sensor_nom" placeholder="Nom du capteur" required>
-                <button type="submit" name="add_sensor">Ajouter</button>
-            </form>
-
             <table>
                 <tr>
                     <th>ID</th>
@@ -264,6 +252,11 @@ $randomVideo = $videoFiles[array_rand($videoFiles)];
                 </tr>
                 <?php endforeach; ?>
             </table>
+            <h3>Ajouter un capteur</h3>
+            <form method="POST">
+                <input type="text" name="sensor_nom" placeholder="Nom du capteur" required>
+                <button type="submit" name="add_sensor">Ajouter</button>
+            </form>
         </section>
 
     </main>

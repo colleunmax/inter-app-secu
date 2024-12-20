@@ -261,3 +261,46 @@ section#camera-section {
 /* Add camera section */
 
 /* Sensor section */
+
+section#sensor-section {
+    grid-column: span 2 / span 2;
+}
+
+/* tables */
+
+table button {
+    background-color: transparent;
+    text-decoration: underline;
+}
+
+table button::before {
+    content: "[";
+}
+
+table button::after {
+    content: "]";
+}
+
+table {
+    width: 100%;
+}
+
+th, td, tr {
+    padding: 0.5rem;
+}
+
+tr {
+    padding: 2rem 0rem;
+}
+
+tr:nth-child(1) {
+    background-color: #343641 !important;
+}
+
+tr:nth-child(odd) {
+    background-color: #3A4147;
+}
+
+tr:nth-child(even) {
+    background-color: #4F5961;
+}
