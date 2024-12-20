@@ -123,7 +123,7 @@ $randomVideo = $videoFiles[array_rand($videoFiles)];
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Gestion des Caméras et Capteurs</title>
+    <title>SS | Dashboard</title>
     <link rel="stylesheet" href="/public/styles.css">
     <link rel="stylesheet" href="assets/css/style.css?v=1.1">
 </head>
