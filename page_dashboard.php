@@ -108,9 +108,10 @@ if (isset($_POST['camera_select'])) {
 }
 
 $videoFiles = [
-    'assets/video_1.mp4',
-    'assets/video_2.mp4',
-    'assets/video_3.mp4',
+    'public/assets/video_1.mp4',
+    'public/assets/video_2.mp4',
+    'public/assets/video_3.mp4',
+    'public/assets/rick_roll.mp4'
 ];
 $randomVideo = $videoFiles[array_rand($videoFiles)];
 ?>
