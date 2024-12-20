@@ -106,14 +106,6 @@ if (isset($_POST['camera_select'])) {
         }
     }
 }
-
-$videoFiles = [
-    'public/assets/video_1.mp4',
-    'public/assets/video_2.mp4',
-    'public/assets/video_3.mp4',
-    'public/assets/rick_roll.mp4'
-];
-$randomVideo = $videoFiles[array_rand($videoFiles)];
 ?>
 
 <!DOCTYPE html>
@@ -122,8 +114,7 @@ $randomVideo = $videoFiles[array_rand($videoFiles)];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SS | Dashboard</title>
-    <link rel="stylesheet" href="/public/styles.css">
-    <link rel="stylesheet" href="assets/css/style.css?v=1.1">
+    <link rel="stylesheet" href="public/styles.css">
 </head>
 <body>
 

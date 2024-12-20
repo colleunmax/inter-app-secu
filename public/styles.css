@@ -1,11 +1,11 @@
 @font-face {
     font-family: "jersey";
-    src: url("/public/fonts/Jersey15-Regular.ttf");
+    src: url("../public/fonts/Jersey15-Regular.ttf");
 }
 
 @font-face {
     font-family: "roboto";
-    src: url("/public/fonts/Roboto-Regular.ttf");
+    src: url("../public/fonts/Roboto-Regular.ttf");
 }
 
 * {

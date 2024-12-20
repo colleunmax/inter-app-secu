@@ -31,9 +31,9 @@ if (empty($_SESSION['csrf_token'])) {
 
     <section id="login-section">
         <h2>
-            <img src="/public/assets/logo-login.svg" alt="In a pixelised font: Smartcity Security">
+            <img src="public/assets/logo-login.svg" alt="In a pixelised font: Smartcity Security">
         </h2>
-        <form id="login-form" method="POST" action="/public/login.php">
+        <form id="login-form" method="POST" action="public/login.php">
             <h3>Connexion Admin</h3>
             <div>
                 <label for="username">Login<span>*</span></label>
