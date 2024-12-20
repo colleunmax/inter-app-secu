@@ -61,22 +61,25 @@ $localAlerts = $alertModel->getLocalAlerts();
     <link rel="stylesheet" href="assets/css/style.css?v=1.1">
 </head>
 <body>
+
     <?php require_once __DIR__ . '/app/views/templates/header.php'; ?>
+    
+    <main>
+        
+        <section class="information-section">
+            <h2>Tableau de bord  des Camera & Capteurs</h2>
+            <p>Ici, vous pouvez voir les différentes alertes des capteurs comme des cameras mises en place dans notre infrastructure. <span>
+            (Si vous voyez cette page et que vous n’êtes pas un personnel âcre dite par la SS, prévenir un administrateur et de quitter cette page dans les plus brefs délais sous risque de poursuite judiciaire.)
+            </span></p>
+            <?php if (isset($success)): ?>
+                <p style="color:green;"><?= htmlspecialchars($success) ?></p>
+            <?php endif; ?>
+            <?php if (isset($error)): ?>
+                <p style="color:red;"><?= htmlspecialchars($error) ?></p>
+            <?php endif; ?>
+        </section>
 
-    <h1>Page d'Alertes</h1>
-
-    <?php if (isset($success)): ?>
-        <p style="color:green;"><?= htmlspecialchars($success) ?></p>
-    <?php endif; ?>
-    <?php if (isset($error)): ?>
-        <p style="color:red;"><?= htmlspecialchars($error) ?></p>
-    <?php endif; ?>
-
-    <form method="GET" action="index.php" style="margin-top: 20px;">
-        <input type="hidden" name="controller" value="dashboard">
-        <input type="hidden" name="action" value="index">
-        <button type="submit">Retour au Dashboard</button>
-    </form>
+    </main>
 
     <h2>Alertes Globales</h2>
     <table>

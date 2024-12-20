@@ -134,22 +134,26 @@ $randomVideo = $videoFiles[array_rand($videoFiles)];
     <link rel="stylesheet" href="assets/css/style.css?v=1.1">
 </head>
 <body>
+
     <?php require_once __DIR__ . '/app/views/templates/header.php'; ?>
 
-    <h1>Dashboard - Gestion des Caméras et Capteurs</h1>
+    <main>
 
-    <?php if (isset($error)): ?>
-        <p style="color:red;"><?= htmlspecialchars($error) ?></p>
-    <?php endif; ?>
-    <?php if (isset($success)): ?>
-        <p style="color:green;"><?= htmlspecialchars($success) ?></p>
-    <?php endif; ?>
+        <section class="information-section">
+            <h2>Tableau de bord  des Camera & Capteurs</h2>
+            <p>Ici, vous pouvez voir les différents capteurs de sécurité de la Smartcity Security Corporation. <span>
+            (Si vous voyez cette page et que vous n’êtes pas un personnel âcre dite par la SS, prévenir un administrateur et de quitter cette page dans les plus brefs délais sous risque de poursuite judiciaire.)
+            </span></p>
+            <?php if (isset($error)): ?>
+                <p style="color:red;"><?= htmlspecialchars($error) ?></p>
+            <?php endif; ?>
+            <?php if (isset($success)): ?>
+                <p style="color:green;"><?= htmlspecialchars($success) ?></p>
+            <?php endif; ?>
+        </section>
 
-    <form method="GET" action="index.php" style="margin-top: 20px;">
-        <input type="hidden" name="controller" value="alert">
-        <input type="hidden" name="action" value="index">
-        <button type="submit">Aller à la page des alertes</button>
-    </form>
+    </main>
+
     
     <h2>Caméras</h2>
     <form method="POST">

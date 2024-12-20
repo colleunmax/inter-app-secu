@@ -27,7 +27,7 @@ class Camera {
             throw new Exception("L'emplacement doit contenir uniquement des lettres (max 20 caractères).");
         }
         $stmt = $this->pdo->prepare("
-            INSERT INTO caméras (emplacement, statut, date_maj)
+            INSERT INTO cameras (emplacement, statut, date_maj)
             VALUES (:emplacement, :statut, NOW())
         ");
         $stmt->execute([
@@ -38,7 +38,7 @@ class Camera {
 
     public function delete($id) {
         $stmt = $this->pdo->prepare("
-            DELETE FROM caméras WHERE id_camera = :id
+            DELETE FROM cameras WHERE id_camera = :id
         ");
         $stmt->execute(['id' => $id]);
     }

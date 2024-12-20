@@ -171,3 +171,52 @@ section#login-section {
     }
 
 }
+
+/* main */
+body:has(main) {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+main {
+    width: 100%;
+    max-width: 1080px;
+    display: flex;
+    flex-direction: column;
+    padding-top: 2rem;
+}
+
+@media screen and (width > 720px) {
+    main {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+    }
+}
+
+/* information section */
+
+section.information-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 2rem;
+    border: 2px solid #749097;
+    border-radius: 0.5rem;
+    background-color: #28292F;
+    grid-column: span 2 / span 2;
+
+    h2 {
+        font-family: "jersey";
+        font-size: 1.5rem;
+    }
+
+    p {
+        span {
+            font-size: 0.8rem;
+            opacity: 0.6;
+        }
+    }
+}
