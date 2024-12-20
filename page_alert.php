@@ -79,62 +79,66 @@ $localAlerts = $alertModel->getLocalAlerts();
             <?php endif; ?>
         </section>
 
+        <section id="global-alert-section" class="alert-section">
+            <h2>Alertes Globales</h2>
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Description</th>
+                    <th>Niveau</th>
+                    <th>Date de Création</th>
+                    <th>Statut</th>
+                    <th>ID Capteur</th>
+                </tr>
+                <?php foreach ($globalAlerts as $alert): ?>
+                <tr>
+                    <td><?= $alert['id_alerte'] ?></td>
+                    <td><?= htmlspecialchars($alert['description']) ?></td>
+                    <td><?= $alert['niveau'] ?></td>
+                    <td><?= $alert['date_creation'] ?></td>
+                    <td><?= $alert['statut'] ? 'Actif' : 'Résolu' ?></td>
+                    <td><?= $alert['id_capteur'] ?></td>
+                </tr>
+                <?php endforeach; ?>
+            </table>
+        </section>
+
+        <section id="local-alert-section" class="alert-section">
+            <h2>Alertes Locales</h2>
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>ID Caméra</th>
+                    <th>Description</th>
+                    <th>Date de Signalement</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+                <?php foreach ($localAlerts as $alert): ?>
+                <tr>
+                    <td><?= $alert['id_alerte'] ?></td>
+                    <td><?= $alert['id_camera'] ?></td>
+                    <td><?= htmlspecialchars($alert['description']) ?></td>
+                    <td><?= $alert['date_signalement'] ?></td>
+                    <td><?= $alert['statut'] ? 'Actif' : 'Résolu' ?></td>
+                    <td>
+                        <?php if ($alert['statut']): ?>
+                            <form method="POST" style="display:inline;">
+                                <input type="hidden" name="alert_id" value="<?= $alert['id_alerte'] ?>">
+                                <button type="submit" name="resolve_alert">Résoudre</button>
+                            </form>
+                        <?php endif; ?>
+                        <form method="POST" style="display:inline;">
+                            <input type="hidden" name="alert_id" value="<?= $alert['id_alerte'] ?>">
+                            <button type="submit" name="delete_alert">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </table>
+        </section>
+
     </main>
-
-    <h2>Alertes Globales</h2>
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Description</th>
-            <th>Niveau</th>
-            <th>Date de Création</th>
-            <th>Statut</th>
-            <th>ID Capteur</th>
-        </tr>
-        <?php foreach ($globalAlerts as $alert): ?>
-        <tr>
-            <td><?= $alert['id_alerte'] ?></td>
-            <td><?= htmlspecialchars($alert['description']) ?></td>
-            <td><?= $alert['niveau'] ?></td>
-            <td><?= $alert['date_creation'] ?></td>
-            <td><?= $alert['statut'] ? 'Actif' : 'Résolu' ?></td>
-            <td><?= $alert['id_capteur'] ?></td>
-        </tr>
-        <?php endforeach; ?>
-    </table>
-
-    <h2>Alertes Locales</h2>
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>ID Caméra</th>
-            <th>Description</th>
-            <th>Date de Signalement</th>
-            <th>Statut</th>
-            <th>Actions</th>
-        </tr>
-        <?php foreach ($localAlerts as $alert): ?>
-        <tr>
-            <td><?= $alert['id_alerte'] ?></td>
-            <td><?= $alert['id_camera'] ?></td>
-            <td><?= htmlspecialchars($alert['description']) ?></td>
-            <td><?= $alert['date_signalement'] ?></td>
-            <td><?= $alert['statut'] ? 'Actif' : 'Résolu' ?></td>
-            <td>
-                <?php if ($alert['statut']): ?>
-                    <form method="POST" style="display:inline;">
-                        <input type="hidden" name="alert_id" value="<?= $alert['id_alerte'] ?>">
-                        <button type="submit" name="resolve_alert">Résoudre</button>
-                    </form>
-                <?php endif; ?>
-                <form method="POST" style="display:inline;">
-                    <input type="hidden" name="alert_id" value="<?= $alert['id_alerte'] ?>">
-                    <button type="submit" name="delete_alert">Supprimer</button>
-                </form>
-            </td>
-        </tr>
-        <?php endforeach; ?>
-    </table>
 
     <br>
 

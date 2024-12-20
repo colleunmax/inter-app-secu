@@ -266,6 +266,12 @@ section#sensor-section {
     grid-column: span 2 / span 2;
 }
 
+/* Global/Local alert sections*/
+
+section.alert-section {
+    grid-column: span 2 / span 2;
+}
+
 /* tables */
 
 table button {
