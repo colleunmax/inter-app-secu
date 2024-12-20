@@ -22,7 +22,7 @@ button {
     cursor: pointer;
 }
 
-input, button {
+input, button, select {
     background-color: #3D3F49;
     padding: 0.4rem 0.8rem;
     border-radius: 0.2rem;
