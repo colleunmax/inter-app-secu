@@ -8,14 +8,14 @@
                 <form method="GET" action="controller.php" style="margin-top: 20px;">
                     <input type="hidden" name="controller" value="dashboard">
                     <input type="hidden" name="action" value="index">
-                    <button type="submit">dashboard</button>
+                    <button type="submit">Dashboard</button>
                 </form>
             </li>
             <li>
                 <form method="GET" action="controller.php" style="margin-top: 20px;">
                     <input type="hidden" name="controller" value="alert">
                     <input type="hidden" name="action" value="index">
-                    <button type="submit">enregistrements</button>
+                    <button type="submit">Enregistrements</button>
                 </form>
             </li>
         </ul>

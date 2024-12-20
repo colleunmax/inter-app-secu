@@ -153,119 +153,120 @@ $randomVideo = $videoFiles[array_rand($videoFiles)];
         </section>
 
         <section id="camera-section">
+            <h2>Caméras : <?= htmlspecialchars($selectedCamera['emplacement']) ?></h2>
+            <form method="POST">
+                <label for="camera_id">Choix de la source</label>
+                <div>
+                    <select name="camera_id" id="camera_id">
+                        <?php foreach ($cameras as $camera): ?>
+                            <?php if ($camera['statut'] == 1): ?>
+                                <option value="<?= $camera['id_camera'] ?>"
+                                    <?= isset($selectedCamera) && $selectedCamera['id_camera'] == $camera['id_camera'] ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($camera['emplacement']) ?>
+                                </option>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </select>
+                    <button type="submit" name="camera_select">Sélectionner</button>
+                </div>
+            </form>
 
+            <?php if ($selectedCamera): ?>
+                <?php 
+                    $videoPath = 'assets/video_' . $selectedCamera['id_video'] . '.mp4';
+                    if (!file_exists($videoPath)) {
+                        $videoPath = 'assets/default.mp4';
+                    }
+                ?>
+                <video src="<?= htmlspecialchars($videoPath) ?>" controls width="500"></video>
+                <form method="POST">
+                    <input type="hidden" name="camera_id" value="<?= $selectedCamera['id_camera'] ?>">
+                    <label for="alert_description">Description :</label>
+                    <input type="text" name="alert_description" id="alert_description" maxlength="255" required>
+                    <button type="submit" name="create_local_alert">Signaler!</button>
+                </form>
+            <?php endif; ?>
+        </section>
+
+        <section id="add-camera-section">
+            <h3>Ajouter une caméra</h3>
+            <form method="POST">
+                <input type="text" name="camera_emplacement" placeholder="Emplacement" required>
+                <select name="camera_statut">
+                    <option value="1">Up</option>
+                    <option value="0">Down</option>
+                </select>
+                <button type="submit" name="add_camera">Ajouter</button>
+            </form>
+
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Emplacement</th>
+                    <th>Statut</th>
+                    <th>Date MAJ</th>
+                    <th>Actions</th>
+                </tr>
+                <?php foreach ($cameras as $camera): ?>
+                <tr>
+                    <td><?= $camera['id_camera'] ?></td>
+                    <td><?= htmlspecialchars($camera['emplacement']) ?></td>
+                    <td><?= $camera['statut'] ? 'Actif' : 'Inactif' ?></td>
+                    <td><?= $camera['date_maj'] ?></td>
+                    <td>
+                        <form method="POST" style="display:inline;">
+                            <input type="hidden" name="camera_id" value="<?= $camera['id_camera'] ?>">
+                            <button type="submit" name="delete_camera">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </table>
+        </section>
+
+
+        <section id="sensor-section">
+            <h2>Capteurs</h2>
+            <h3>Ajouter un capteur</h3>
+            <form method="POST">
+                <input type="text" name="sensor_nom" placeholder="Nom du capteur" required>
+                <button type="submit" name="add_sensor">Ajouter</button>
+            </form>
+
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Emplacement</th>
+                    <th>État d'alerte</th>
+                    <th>Actions</th>
+                    <th>Actions</th>
+                </tr>
+                <?php foreach ($sensors as $sensor): ?>
+                <tr>
+                    <td><?= $sensor['id_capteur'] ?></td>
+                    <td><?= htmlspecialchars($sensor['emplacement']) ?></td>
+                    <td><?= $sensor['niveau_alerte'] ? 'Alerte active' : 'Aucune alerte' ?></td>
+                    <td>
+                        <form method="POST" style="display:inline;">
+                            <input type="hidden" name="sensor_id" value="<?= $sensor['id_capteur'] ?>">
+                            <button type="submit" name="delete_sensor">Supprimer</button>
+                        </form>
+                    </td>
+                    <td>    
+                        <form method="POST" style="display:inline;">
+                            <input type="hidden" name="sensor_id" value="<?= $sensor['id_capteur'] ?>">
+                            <input type="hidden" name="current_level" value="<?= $sensor['niveau_alerte'] ?>">
+                            <button type="submit" name="toggle">
+                                <?= $sensor['niveau_alerte'] == 1 ? 'Désactiver' : 'Activer' ?>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </table>
         </section>
 
     </main>
-
-    
-    <h2>Caméras</h2>
-    <form method="POST">
-        <label for="camera_id">Choisir une caméra (actives) :</label>
-        <select name="camera_id" id="camera_id">
-            <?php foreach ($cameras as $camera): ?>
-                <?php if ($camera['statut'] == 1): ?>
-                    <option value="<?= $camera['id_camera'] ?>"
-                        <?= isset($selectedCamera) && $selectedCamera['id_camera'] == $camera['id_camera'] ? 'selected' : '' ?>>
-                        <?= htmlspecialchars($camera['emplacement']) ?>
-                    </option>
-                <?php endif; ?>
-            <?php endforeach; ?>
-        </select>
-        <button type="submit" name="camera_select">Sélectionner</button>
-    </form>
-
-    <?php if ($selectedCamera): ?>
-    <h3>Caméra sélectionnée : <?= htmlspecialchars($selectedCamera['emplacement']) ?></h3>
-    <?php 
-        $videoPath = 'assets/video_' . $selectedCamera['id_video'] . '.mp4';
-        if (!file_exists($videoPath)) {
-            $videoPath = 'assets/default.mp4';
-        }
-    ?>
-    <video src="<?= htmlspecialchars($videoPath) ?>" controls width="500"></video>
-
-    <?php endif; ?>
-    <h3>Créer une alerte locale</h3>
-    <form method="POST">
-        <input type="hidden" name="camera_id" value="<?= $selectedCamera['id_camera'] ?>">
-        <label for="alert_description">Description :</label>
-        <input type="text" name="alert_description" id="alert_description" maxlength="255" required>
-        <button type="submit" name="create_local_alert">Créer une alerte locale</button>
-    </form>
-
-    <h3>Ajouter une caméra</h3>
-    <form method="POST">
-        <input type="text" name="camera_emplacement" placeholder="Emplacement" required>
-        <select name="camera_statut">
-            <option value="1">Up</option>
-            <option value="0">Down</option>
-        </select>
-        <button type="submit" name="add_camera">Ajouter</button>
-    </form>
-
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Emplacement</th>
-            <th>Statut</th>
-            <th>Date MAJ</th>
-            <th>Actions</th>
-        </tr>
-        <?php foreach ($cameras as $camera): ?>
-        <tr>
-            <td><?= $camera['id_camera'] ?></td>
-            <td><?= htmlspecialchars($camera['emplacement']) ?></td>
-            <td><?= $camera['statut'] ? 'Actif' : 'Inactif' ?></td>
-            <td><?= $camera['date_maj'] ?></td>
-            <td>
-                <form method="POST" style="display:inline;">
-                    <input type="hidden" name="camera_id" value="<?= $camera['id_camera'] ?>">
-                    <button type="submit" name="delete_camera">Supprimer</button>
-                </form>
-            </td>
-        </tr>
-        <?php endforeach; ?>
-    </table>
-
-    <h2>Capteurs</h2>
-    <h3>Ajouter un capteur</h3>
-    <form method="POST">
-        <input type="text" name="sensor_nom" placeholder="Nom du capteur" required>
-        <button type="submit" name="add_sensor">Ajouter</button>
-    </form>
-
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Emplacement</th>
-            <th>État d'alerte</th>
-            <th>Actions</th>
-            <th>Actions</th>
-        </tr>
-        <?php foreach ($sensors as $sensor): ?>
-        <tr>
-            <td><?= $sensor['id_capteur'] ?></td>
-            <td><?= htmlspecialchars($sensor['emplacement']) ?></td>
-            <td><?= $sensor['niveau_alerte'] ? 'Alerte active' : 'Aucune alerte' ?></td>
-            <td>
-                <form method="POST" style="display:inline;">
-                    <input type="hidden" name="sensor_id" value="<?= $sensor['id_capteur'] ?>">
-                    <button type="submit" name="delete_sensor">Supprimer</button>
-                </form>
-            </td>
-            <td>    
-                <form method="POST" style="display:inline;">
-                    <input type="hidden" name="sensor_id" value="<?= $sensor['id_capteur'] ?>">
-                    <input type="hidden" name="current_level" value="<?= $sensor['niveau_alerte'] ?>">
-                    <button type="submit" name="toggle">
-                        <?= $sensor['niveau_alerte'] == 1 ? 'Désactiver' : 'Activer' ?>
-                    </button>
-                </form>
-            </td>
-        </tr>
-        <?php endforeach; ?>
-    </table>
 
     <br>
     
