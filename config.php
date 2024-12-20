@@ -25,12 +25,14 @@ function getSecurityConnection() {
         $dbName = $_ENV["LOCAL_DBNAME"];
         $user = $_ENV["LOCAL_USERNAME"];
         $password = $_ENV["LOCAL_PASSWORD"];
-        return new PDO(
+        $pdo = new PDO(
             "mysql:host=".$host.";dbname=".$dbName,
             $user,
             $password,
             [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
         );
+        $pdo->exec("SET NAMES utf8;");
+        return $pdo;
     } catch (PDOException $e) {
         die("Erreur de connexion à la base de données Locale : " . $e->getMessage());
     }
@@ -42,12 +44,14 @@ function getSmartcityConnection() {
         $dbName = $_ENV["MASTER_DBNAME"];
         $user = $_ENV["MASTER_USERNAME"];
         $password = $_ENV["MASTER_PASSWORD"];
-        return new PDO(
+        $pdo = new PDO(
             "mysql:host=".$host.";dbname=".$dbName,
             $user,
             $password,
             [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
         );
+        $pdo->exec("SET NAMES utf8;");
+        return $pdo;
     } catch (PDOException $e) {
         die("Erreur de connexion à la base de données distante : " . $e->getMessage());
     }
