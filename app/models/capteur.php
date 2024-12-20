@@ -10,7 +10,6 @@
  * Ce fichier utilise deux connexions à la base de données (sécurité et smartcity).
  */
 
-require_once __DIR__ . '/../../config.php';
 require_once 'alert.php'; 
 
 class Capteur {
@@ -21,7 +20,7 @@ class Capteur {
     public function __construct($pdo_security, $pdo_smartcity) {
         $this->pdo_security = $pdo_security;
         $this->pdo_smartcity = $pdo_smartcity;
-        $this->alert = new Alert(); 
+        $this->alert = new Alert($pdo_security, $pdo_smartcity); 
     }
 
     public function getAll() {

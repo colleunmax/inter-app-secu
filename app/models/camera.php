@@ -8,13 +8,11 @@
  * Utilise la base de données pour stocker les informations des caméras.
  */
 
-require_once __DIR__ . '/../../config.php';
-
 class Camera {
     private $pdo;
 
-    public function __construct() {
-        $this->pdo = getSecurityConnection();
+    public function __construct(PDO $security_pdo) {
+        $this->pdo = $security_pdo;
     }
 
     public function getAll() {

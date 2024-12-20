@@ -8,15 +8,13 @@
  * Ce fichier utilise la connexion à la base de données pour enregistrer les alertes.
  */
 
-require_once __DIR__ . '/../../config.php';
-
 class Alert {
     private $pdo_smartcity;
     private $pdo_security;
 
-    public function __construct() {
-        $this->pdo_smartcity = getSmartcityConnection();
-        $this->pdo_security = getSecurityConnection();
+    public function __construct(PDO $pdo_security, PDO $pdo_smartcity) {
+        $this->pdo_smartcity = $pdo_smartcity;
+        $this->pdo_security = $pdo_security;
     }
 
     public function getGlobalAlerts() {

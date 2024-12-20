@@ -17,11 +17,12 @@ if (!isset($_SESSION['logged_in'])) {
     exit();
 }
 
-require_once __DIR__ . '/config.php';
 require_once 'app/models/alert.php';
+require_once 'core/database.php';
 
-$pdo_security = getSecurityConnection();
-$alertModel = new Alert($pdo_security);
+$pdo_security = Database::getSecurityPDO();
+$pdo_smartcity = Database::getSlaveSmartcityPDO();
+$alertModel = new Alert($pdo_security, $pdo_smartcity);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
