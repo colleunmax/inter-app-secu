@@ -11,7 +11,7 @@
  */
 
 require_once __DIR__ . '/../../config.php';
-require_once 'Alert.php'; 
+require_once 'alert.php'; 
 
 class Capteur {
     private $pdo_security;
@@ -36,7 +36,7 @@ class Capteur {
 
         try {
             $stmt = $this->pdo_smartcity->prepare("
-                INSERT INTO capteurs (nom_capteur, departement, statut, type_capteur)
+                INSERT INTO Capteurs (nom_capteur, departement, statut, type_capteur)
                 VALUES (:nom, 'Sécurité', 3, 3)
             ");
             $stmt->execute(['nom' => $nom]);
@@ -64,7 +64,7 @@ class Capteur {
             $stmt->execute(['id' => $id]);
 
             $stmtSmartcity = $this->pdo_smartcity->prepare("
-                DELETE FROM capteurs WHERE id_capteur = :id
+                DELETE FROM Capteurs WHERE id_capteur = :id
             ");
             $stmtSmartcity->execute(['id' => $id]);
         } catch (PDOException $e) {
