@@ -16,8 +16,6 @@ $error_message = isset($_GET['error']) ? htmlspecialchars($_GET['error']) : '';
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
-
-require_once __DIR__ . '/app/views/templates/header.php';
 ?>
 
 <!DOCTYPE html>
@@ -25,26 +23,35 @@ require_once __DIR__ . '/app/views/templates/header.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page de Connexion</title>
+    <link rel="stylesheet" href="/public/styles.css">
+    <title>SS | Connexion</title>
 </head>
 <body>
-    <h2>Connexion</h2>
+    <?php require_once __DIR__ . '/app/views/templates/header.php'; ?>
 
-    <?php if (!empty($error_message)): ?>
-        <p style="color:red;"><?= $error_message; ?></p>
-    <?php endif; ?>
+    <section id="login-section">
+        <h2>
+            <img src="/public/assets/logo-login.svg" alt="In a pixelised font: Smartcity Security">
+        </h2>
+        <form id="login-form" method="POST" action="/public/login.php">
+            <h3>Connexion Admin</h3>
+            <div>
+                <label for="username">Login<span>*</span></label>
+                <input placeholder="user1" type="text" name="username" id="username" maxlength="30" required>
+            </div>
 
-    <form method="POST" action="login.php">
-        <label for="username">Nom d'utilisateur :</label>
-        <input type="text" name="username" id="username" maxlength="30" required><br>
+            <div>
+                <label for="password">Mot de passe<span>*</span></label>
+                <input placeholder="yourpassword" type="password" name="password" id="password" maxlength="30" required>
+            </div>
 
-        <label for="password">Mot de passe :</label>
-        <input type="password" name="password" id="password" maxlength="30" required><br>
-
-        <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token']; ?>">
-
-        <button type="submit">Se connecter</button>
-    </form>
+            <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token']; ?>">
+            <?php if (!empty($error_message)): ?>
+                <p><?= $error_message; ?></p>
+            <?php endif; ?>
+            <button type="submit">Se connecter</button>
+        </form>
+    </section>
 
     <?php require_once __DIR__ . '/app/views/templates/footer.php'; ?>
 </body>
