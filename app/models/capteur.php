@@ -10,21 +10,22 @@
  * Ce fichier utilise deux connexions à la base de données (sécurité et smartcity).
  */
 
+require_once 'core/database.php';
 require_once 'alert.php'; 
 
 class Capteur {
-    private $pdo_security;
-    private $pdo_smartcity;
-    private $alert;
+    protected $securityPDO;
+    protected $smartcityMasterPDO;
+    protected $alert;
 
-    public function __construct($pdo_security, $pdo_smartcity) {
-        $this->pdo_security = $pdo_security;
-        $this->pdo_smartcity = $pdo_smartcity;
-        $this->alert = new Alert($pdo_security, $pdo_smartcity); 
+    public function __construct() {
+        $this->securityPDO = Database::getSecurityPDO();
+        $this->smartcityMasterPDO = Database::getMasterSmartcityPDO();
+        $this->alert = new Alert(); 
     }
 
     public function getAll() {
-        $stmt = $this->pdo_security->query("SELECT id_capteur, emplacement, niveau_alerte FROM capteurs_intrusion");
+        $stmt = $this->securityPDO->query("SELECT id_capteur, emplacement, niveau_alerte FROM capteurs_intrusion");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -34,15 +35,15 @@ class Capteur {
         }
 
         try {
-            $stmt = $this->pdo_smartcity->prepare("
+            $stmt = $this->smartcityMasterPDO->prepare("
                 INSERT INTO Capteurs (nom_capteur, departement, statut, type_capteur)
                 VALUES (:nom, 'Sécurité', 3, 3)
             ");
             $stmt->execute(['nom' => $nom]);
 
-            $idCapteur = $this->pdo_smartcity->lastInsertId();
+            $idCapteur = $this->smartcityMasterPDO->lastInsertId();
 
-            $stmtSecurity = $this->pdo_security->prepare("
+            $stmtSecurity = $this->securityPDO->prepare("
                 INSERT INTO capteurs_intrusion (id_capteur, emplacement, niveau_alerte, date_signalement)
                 VALUES (:id, :emplacement, 0, NOW())
             ");
@@ -57,12 +58,12 @@ class Capteur {
 
     public function delete($id) {
         try {
-            $stmt = $this->pdo_security->prepare("
+            $stmt = $this->securityPDO->prepare("
                 DELETE FROM capteurs_intrusion WHERE id_capteur = :id
             ");
             $stmt->execute(['id' => $id]);
 
-            $stmtSmartcity = $this->pdo_smartcity->prepare("
+            $stmtSmartcity = $this->smartcityMasterPDO->prepare("
                 DELETE FROM Capteurs WHERE id_capteur = :id
             ");
             $stmtSmartcity->execute(['id' => $id]);
@@ -73,7 +74,7 @@ class Capteur {
 
     public function updateAlertLevel($id, $level) {
         try {
-            $stmt = $this->pdo_security->prepare("
+            $stmt = $this->securityPDO->prepare("
                 UPDATE capteurs_intrusion SET niveau_alerte = :niveau_alerte WHERE id_capteur = :id
             ");
             $stmt->execute([
@@ -82,7 +83,7 @@ class Capteur {
             ]);
 
             if ($level > 0) {
-                $stmtSensor = $this->pdo_security->prepare("
+                $stmtSensor = $this->securityPDO->prepare("
                     SELECT emplacement FROM capteurs_intrusion WHERE id_capteur = :id
                 ");
                 $stmtSensor->execute(['id' => $id]);

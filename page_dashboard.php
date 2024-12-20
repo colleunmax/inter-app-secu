@@ -28,14 +28,11 @@ if (!isset($_SESSION['logged_in'])) {
 require_once 'app/models/capteur.php';
 require_once 'app/models/camera.php';
 require_once 'app/models/alert.php';
-require_once 'core/database.php';
 
-$pdo_security = Database::getSecurityPDO();
-$pdo_smartcity = Database::getSlaveSmartcityPDO();
 
-$cameraModel = new Camera($pdo_security);
-$sensorModel = new Capteur($pdo_security, $pdo_smartcity);
-$alertModel = new Alert($pdo_security, $pdo_smartcity);
+$cameraModel = new Camera();
+$sensorModel = new Capteur();
+$alertModel = new Alert();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {

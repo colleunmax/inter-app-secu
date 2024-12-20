@@ -8,17 +8,21 @@
  * Ce fichier utilise la connexion à la base de données pour enregistrer les alertes.
  */
 
-class Alert {
-    private $pdo_smartcity;
-    private $pdo_security;
+ require_once 'core/database.php';
 
-    public function __construct(PDO $pdo_security, PDO $pdo_smartcity) {
-        $this->pdo_smartcity = $pdo_smartcity;
-        $this->pdo_security = $pdo_security;
+class Alert {
+    protected $smartcityMasterPDO;
+    protected $smartcitySlavePDO;
+    protected $securityPDO;
+
+    public function __construct() {
+        $this->smartcityMasterPDO = Database::getMasterSmartcityPDO();
+        $this->smartcitySlavePDO = Database::getSlaveSmartcityPDO();
+        $this->securityPDO = Database::getSecurityPDO();
     }
 
     public function getGlobalAlerts() {
-        $stmt = $this->pdo_smartcity->query("
+        $stmt = $this->smartcitySlavePDO->query("
             SELECT id_alerte, description, niveau, date_creation, statut, id_capteur 
             FROM Alertes_Globales
         ");
@@ -26,7 +30,7 @@ class Alert {
     }
 
     public function getLocalAlerts() {
-        $stmt = $this->pdo_security->query("
+        $stmt = $this->securityPDO->query("
             SELECT id_alerte, id_camera, description, date_signalement, statut 
             FROM alertes_locales
         ");
@@ -34,7 +38,7 @@ class Alert {
     }
 
     public function createLocalAlert($cameraId, $description) {
-        $stmt = $this->pdo_security->prepare("
+        $stmt = $this->securityPDO->prepare("
             INSERT INTO alertes_locales (id_camera, description, date_signalement, statut)
             VALUES (:cameraId, :description, NOW(), 1)
         ");
@@ -46,7 +50,7 @@ class Alert {
 
     public function createGlobalAlert($sensorId, $description) {
         try {
-            $stmt = $this->pdo_smartcity->prepare("
+            $stmt = $this->smartcityMasterPDO->prepare("
                 INSERT INTO Alertes_Globales (description, niveau, date_creation, statut, id_capteur)
                 VALUES (:description, 3, NOW(), 1, :id_capteur)
             ");
@@ -61,7 +65,7 @@ class Alert {
 
     public function deleteLocalAlert($alertId) {
         try {
-            $stmt = $this->pdo_security->prepare("DELETE FROM alertes_locales WHERE id_alerte = :id");
+            $stmt = $this->securityPDO->prepare("DELETE FROM alertes_locales WHERE id_alerte = :id");
             $stmt->execute(['id' => $alertId]);
         } catch (PDOException $e) {
             throw new Exception("Erreur lors de la suppression de l'alerte locale : " . $e->getMessage());
@@ -69,7 +73,7 @@ class Alert {
     }
 
     public function resolveLocalAlert($alertId) {
-        $stmt = $this->pdo_security->prepare("
+        $stmt = $this->securityPDO->prepare("
             UPDATE alertes_locales
             SET statut = 0
             WHERE id_alerte = :id

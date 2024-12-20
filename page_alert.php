@@ -18,11 +18,8 @@ if (!isset($_SESSION['logged_in'])) {
 }
 
 require_once 'app/models/alert.php';
-require_once 'core/database.php';
 
-$pdo_security = Database::getSecurityPDO();
-$pdo_smartcity = Database::getSlaveSmartcityPDO();
-$alertModel = new Alert($pdo_security, $pdo_smartcity);
+$alertModel = new Alert();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
