@@ -1,3 +1,3 @@
 <footer>
-    <p>&copy; 2024 Département de la sécurité</p>
+    <p>&copy; smartcity inc.</p>
 </footer>
