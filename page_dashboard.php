@@ -152,6 +152,10 @@ $randomVideo = $videoFiles[array_rand($videoFiles)];
             <?php endif; ?>
         </section>
 
+        <section id="camera-section">
+
+        </section>
+
     </main>
 
     
@@ -181,6 +185,7 @@ $randomVideo = $videoFiles[array_rand($videoFiles)];
     ?>
     <video src="<?= htmlspecialchars($videoPath) ?>" controls width="500"></video>
 
+    <?php endif; ?>
     <h3>Créer une alerte locale</h3>
     <form method="POST">
         <input type="hidden" name="camera_id" value="<?= $selectedCamera['id_camera'] ?>">
@@ -188,7 +193,6 @@ $randomVideo = $videoFiles[array_rand($videoFiles)];
         <input type="text" name="alert_description" id="alert_description" maxlength="255" required>
         <button type="submit" name="create_local_alert">Créer une alerte locale</button>
     </form>
-<?php endif; ?>
 
     <h3>Ajouter une caméra</h3>
     <form method="POST">
