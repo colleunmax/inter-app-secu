@@ -1,4 +1,8 @@
-# Projet du Groupe 11 : Smartcity - Pôle sécurité
+<a name="top"></a>
+![cc music lib](banner.png)
+
+> Application of the Smartcity Security (g11).
+
 ## Membres :
 - Colle Joulian 
 - Duchenne Corention
