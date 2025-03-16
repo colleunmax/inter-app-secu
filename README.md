@@ -27,4 +27,4 @@ We maintained a daily journal to keep track of completed tasks: [Activity Log](h
 We used GitHub to manage files. You should already be familiar with this platform.<br>  
 
 ## ✅ License  
-This project is licensed. You can check the corresponding file here: [LICENCE.txt](./LICENCE.txt)<br>  
+This project is licensed. You can check the corresponding file here: [LICENCE.txt](./LICENSE.txt)<br>  
